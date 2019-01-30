@@ -18,7 +18,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.kabouros.mybatis.spring;
+package com.kabouros.mybatis.spring.configuration;
 
 import java.util.List;
 

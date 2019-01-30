@@ -18,22 +18,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.kabouros.mybatis.spring.query;
+package com.kabouros.mybatis.api.mapper;
 
 import java.io.Serializable;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.kabouros.mybatis.api.mapper.MyBatisMapper;
 
 /**
  * @author JIANG
- *
- * @param <T>
- * @param <ID>
- * @param <R>
  */
-public abstract class BaseServiceImpl<T, ID extends Serializable, R extends BaseMapper<T, ID>> implements BaseService<T, ID> {
-		
-	@Autowired
-	protected R mapper;
-
+public interface BaseMapper <T,ID extends Serializable> extends MyBatisMapper<T,ID> {
+	
 }
