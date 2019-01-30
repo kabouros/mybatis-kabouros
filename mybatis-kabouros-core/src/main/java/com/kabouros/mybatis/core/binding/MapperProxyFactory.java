@@ -28,11 +28,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.ibatis.session.SqlSession;
 
+import com.kabouros.mybatis.api.exception.AnnotationMapperException;
 import com.kabouros.mybatis.api.mapper.CrudMapper;
 import com.kabouros.mybatis.core.mapping.DefaultMapperEntityMetadata;
-import com.kabouros.mybatis.core.mapping.MappedStatementHandle;
-import com.kabouros.mybatis.core.mapping.MappedStatementHandleRegistry;
+import com.kabouros.mybatis.core.mapping.EntityProperty;
 import com.kabouros.mybatis.core.mapping.MapperEntityMetadata;
+import com.kabouros.mybatis.core.mapping.handle.MappedStatementHandle;
+import com.kabouros.mybatis.core.mapping.handle.MappedStatementHandleRegistry;
+import com.kabouros.mybatis.core.util.ClassUtil;
 
 /**
  * 接口映射代理工厂
@@ -73,11 +76,25 @@ public class MapperProxyFactory<T> {
     
     private void mappedStatementHandleRegistry(SqlSession sqlSession){
 		if(CrudMapper.class.isAssignableFrom(mapperInterface)){
+			int primaryKeyCount = 0;
+			for(EntityProperty ep:mapperEntityMetadata.getEntityPropertys()) {
+				if(ep.isPrimarykey()) {
+					primaryKeyCount++;
+				}
+			}
+			if(primaryKeyCount == 0) {
+				throw new AnnotationMapperException(mapperEntityMetadata.getEntityType().getName()+" no identifier<@Id> specified");
+			}
+			if(primaryKeyCount > 1 && ClassUtil.isBaseType(mapperEntityMetadata.getPrimaryKeyType())) {
+				throw new AnnotationMapperException(mapperInterface.getName()+" error superclass identifier generic; composite primary key suggested use "+mapperEntityMetadata.getEntityType().getSimpleName());
+			}
+			if(primaryKeyCount == 1 && !ClassUtil.isBaseType(mapperEntityMetadata.getPrimaryKeyType())) {
+				throw new AnnotationMapperException(mapperInterface.getName()+" error superclass identifier generic; composite primary key suggested use "+mapperEntityMetadata.getEntityType().getSimpleName());
+			}
 			List<MappedStatementHandle> mappedStatementHandles = MappedStatementHandleRegistry.getInstance().getRegistry();
-			for(MappedStatementHandle handle:mappedStatementHandles){
+			for(MappedStatementHandle handle:mappedStatementHandles) {
 				handle.handle(sqlSession.getConfiguration(), mapperInterface, mapperEntityMetadata);
 			}
 		}
     }
-
 }

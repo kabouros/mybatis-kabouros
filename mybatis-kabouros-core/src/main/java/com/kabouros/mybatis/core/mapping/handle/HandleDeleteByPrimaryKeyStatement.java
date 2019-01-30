@@ -35,25 +35,24 @@ import org.apache.ibatis.session.Configuration;
 
 import com.kabouros.mybatis.api.mapper.CrudMapper;
 import com.kabouros.mybatis.core.mapping.EntityProperty;
-import com.kabouros.mybatis.core.mapping.MappedStatementHandle;
 import com.kabouros.mybatis.core.mapping.MapperEntityMetadata;
 /**
  * deleteByPrimaryKey sql
  * @author JIANG
  */
-public class HandleDeleteByPrimaryKeyStatement implements MappedStatementHandle {
+class HandleDeleteByPrimaryKeyStatement implements MappedStatementHandle {
 
 	@Override
 	public void handle(Configuration configuration, Class<?> mapperClass,MapperEntityMetadata<?> entityMetadata) {
 		StringBuilder delete = new StringBuilder("delete from ").append(entityMetadata.getTableName()).append(" where 1 = 1");
 		for(EntityProperty ep:entityMetadata.getEntityPropertys()){
 			if(ep.isPrimarykey()){
-				delete.append(" and ").append(ep.getColumnName()).append(" = #{").append(ep.getName()).append("},");
+				delete.append(" and ").append(ep.getColumnName()).append(" = #{").append(ep.getName()).append("} ");
 			}
 		}
-		String deleteSql = delete.deleteCharAt(delete.length() - 1).toString();
+		//String deleteSql = delete.deleteCharAt(delete.length() - 1).toString();
 		String deleteId = String.join(".",mapperClass.getName(),CrudMapper.METHOD_NAME_DELETEBYPRIMARYKEY);
-		addMappedStatement(configuration,deleteSql,entityMetadata.getPrimaryKeyType(),deleteId,SqlCommandType.DELETE,null);
+		addMappedStatement(configuration,delete.toString(),entityMetadata.getPrimaryKeyType(),deleteId,SqlCommandType.DELETE,null);
 	}
 	
 	

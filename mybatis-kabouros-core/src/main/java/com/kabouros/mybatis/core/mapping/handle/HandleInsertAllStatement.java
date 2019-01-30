@@ -38,13 +38,12 @@ import org.apache.ibatis.session.Configuration;
 
 import com.kabouros.mybatis.api.mapper.CrudMapper;
 import com.kabouros.mybatis.core.mapping.EntityProperty;
-import com.kabouros.mybatis.core.mapping.MappedStatementHandle;
 import com.kabouros.mybatis.core.mapping.MapperEntityMetadata;
 /**
  * insertAll sql
  * @author JIANG
  */
-public class HandleInsertAllStatement implements MappedStatementHandle{
+class HandleInsertAllStatement implements MappedStatementHandle{
 
 	@Override
 	public void handle(Configuration configuration, Class<?> mapperClass,MapperEntityMetadata<?> entityMetadata) {

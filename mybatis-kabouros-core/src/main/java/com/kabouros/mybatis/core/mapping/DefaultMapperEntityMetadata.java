@@ -20,6 +20,7 @@
  */
 package com.kabouros.mybatis.core.mapping;
 
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -50,7 +51,7 @@ public class DefaultMapperEntityMetadata<T> implements MapperEntityMetadata<T> {
 	    this.entityType = ClassUtil.getInterfaceGeneric(mapperClazz,0);
 		Assert.notNull(entityType,String.format("%s superclass does not have entity generic", mapperClazz));
 		this.primaryKeyType = ClassUtil.getInterfaceGeneric(mapperClazz,1);
-		Assert.notNull(primaryKeyType,String.format("%s superclass does not have id generic", mapperClazz));
+		Assert.notNull(primaryKeyType,String.format("%s superclass does not have identifier generic", mapperClazz));
 		this.mapperType = mapperClazz;
 		Table table = entityType.getAnnotation(Table.class);
 		if(null != table) {
@@ -67,20 +68,22 @@ public class DefaultMapperEntityMetadata<T> implements MapperEntityMetadata<T> {
 		if(this.entityPropertys == null){
 			this.entityPropertys = new ArrayList<>();
 			ReflectionUtil.doWithFields(entityType, field-> {
-				String fieldName = field.getName();
-				try {
-					EntityProperty ep = new EntityProperty(fieldName,entityType);
-					ep.setJavaType(field.getType());
-					ep.setColumnName(namingStrategy.propertyToColumnName(fieldName));
-					if(null != field.getAnnotation(Id.class)){
-						ep.setPrimarykey(true);
+			    if(!Modifier.isStatic(field.getModifiers())){
+				    String fieldName = field.getName();
+					try {
+						EntityProperty ep = new EntityProperty(fieldName,entityType);
+						ep.setJavaType(field.getType());
+						ep.setColumnName(namingStrategy.propertyToColumnName(fieldName));
+						if(null != field.getAnnotation(Id.class)){
+							ep.setPrimarykey(true);
+						}
+						if(null != field.getAnnotation(Transient.class)){
+							ep.setTransienta(true);
+						}
+						entityPropertys.add(ep);
+					} catch (Exception e) {
+						throw new IllegalArgumentException(e);
 					}
-					if(null != field.getAnnotation(Transient.class)){
-						ep.setTransienta(true);
-					}
-					entityPropertys.add(ep);
-				} catch (Exception e) {
-					throw new IllegalArgumentException(e);
 				}
 			});
 		}

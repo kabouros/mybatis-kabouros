@@ -20,20 +20,55 @@
  */
 package com.kabouros.mybatis.core.mapping.handle;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.ParameterMap;
+import org.apache.ibatis.mapping.ParameterMapping;
+import org.apache.ibatis.mapping.SqlCommandType;
+import org.apache.ibatis.mapping.SqlSource;
+import org.apache.ibatis.scripting.xmltags.DynamicSqlSource;
+import org.apache.ibatis.scripting.xmltags.ForEachSqlNode;
+import org.apache.ibatis.scripting.xmltags.MixedSqlNode;
+import org.apache.ibatis.scripting.xmltags.SqlNode;
+import org.apache.ibatis.scripting.xmltags.StaticTextSqlNode;
 import org.apache.ibatis.session.Configuration;
 
-import com.kabouros.mybatis.core.mapping.MappedStatementHandle;
+import com.kabouros.mybatis.api.mapper.CrudMapper;
+import com.kabouros.mybatis.core.mapping.EntityProperty;
 import com.kabouros.mybatis.core.mapping.MapperEntityMetadata;
+import com.kabouros.mybatis.core.util.ClassUtil;
 /**
  * deleteByPrimaryKey sql
  * @author JIANG
  */
-public class HandleDeleteByPrimaryKeysStatement implements MappedStatementHandle {
+class HandleDeleteByPrimaryKeysStatement implements MappedStatementHandle {
 	
 	@Override
 	public void handle(Configuration configuration, Class<?> mapperClass,MapperEntityMetadata<?> entityMetadata) {
-		// TODO Auto-generated method stub
+		List<SqlNode> rootSqlNodes = new ArrayList<>();
+		StringBuilder delete = new StringBuilder("delete from ").append(entityMetadata.getTableName()).append(" where 1 = 1 ");
+		rootSqlNodes.add(new StaticTextSqlNode(delete.toString()));
+		ForEachSqlNode forEachSqlNode;
+		for(EntityProperty ep:entityMetadata.getEntityPropertys()){
+			if(ep.isPrimarykey()){
+				rootSqlNodes.add(new StaticTextSqlNode(String.join("", " and ",ep.getColumnName()," in")));
+				String itemStr = "item";
+				String valueStr = ClassUtil.isBaseType(entityMetadata.getPrimaryKeyType()) ? itemStr : String.join(".", itemStr,ep.getName());
+				forEachSqlNode = new ForEachSqlNode(configuration,new StaticTextSqlNode(String.join("","#{",valueStr,"}")),"list",null,itemStr,"(",")",",");
+				rootSqlNodes.add(forEachSqlNode);
+			}
+		}
+		SqlSource sqlSource = new DynamicSqlSource(configuration,new MixedSqlNode(rootSqlNodes));
+		String insertId = String.join(".",mapperClass.getName(),CrudMapper.METHOD_NAME_DELETEBYPRIMARYKEYS);
+	    MappedStatement.Builder builder = new MappedStatement.Builder(configuration,insertId,sqlSource,SqlCommandType.DELETE);
+	    List<ParameterMapping> parameterMappings = new ArrayList<ParameterMapping>();
+	    builder.parameterMap( new ParameterMap.Builder(configuration,insertId + "-Inline",List.class,parameterMappings).build());
+	    builder.flushCacheRequired(true);
+	    MappedStatement ms = builder.resultMaps(Collections.emptyList()).build();
+	    configuration.addMappedStatement(ms);
 	}
-
 
 }

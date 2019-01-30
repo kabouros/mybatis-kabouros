@@ -60,5 +60,19 @@ public class ClassUtil {
     	}
     	return null;
 	}
+	
+	public static boolean isBaseType(Class<?> clazz) {
+	    if (clazz.equals(java.lang.Character.class) ||
+	        clazz.equals(java.lang.Integer.class) || clazz.equals(int.class) ||
+	    	clazz.equals(java.lang.Long.class) || clazz.equals(long.class) ||
+	        clazz.equals(java.lang.Double.class) || clazz.equals(double.class) ||
+	        clazz.equals(java.lang.Float.class) || clazz.equals(float.class) ||
+	        clazz.equals(java.lang.Short.class) || clazz.equals(short.class) ||
+	        clazz.equals(java.lang.Byte.class) || clazz.equals(byte.class) ||
+	        clazz.equals(java.lang.Boolean.class) || clazz.equals(boolean.class)) {
+	        return true;
+	    }
+	    return false;
+	}
 
 }

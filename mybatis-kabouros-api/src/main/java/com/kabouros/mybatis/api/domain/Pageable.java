@@ -27,6 +27,7 @@ public interface Pageable {
 	
 	String PARAM_NAME_START = "start";
 	String PARAM_NAME_OFFSET = "offset";
+	String SQL_COUNT_SUFFIX = "-count";
 	String NAME = Pageable.class.getSimpleName().toLowerCase();
 	String PARAM_PROPERTY_START = String.join(".", NAME,PARAM_NAME_START);
 	String PARAM_PROPERTY_OFFSET = String.join(".", NAME,PARAM_NAME_OFFSET);

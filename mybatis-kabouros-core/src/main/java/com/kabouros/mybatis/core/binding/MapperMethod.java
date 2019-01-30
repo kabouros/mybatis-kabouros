@@ -167,7 +167,7 @@ public class MapperMethod {
 			if(null == args || null == (pageable=args[method.getPageableArgsIndex()]) || !(pageable instanceof Pageable)){
 				throw new IllegalArgumentException(command.getName()+" no pageable param");
 			}
-			String countStatement = String.join("-",command.getName(),"count");
+			String countStatement = String.join("",command.getName(),Pageable.SQL_COUNT_SUFFIX);
 			long count = (long)sqlSession.selectOne(countStatement, param);
 			return new Page<>((List<?>)result,(Pageable)pageable,count);
 		}

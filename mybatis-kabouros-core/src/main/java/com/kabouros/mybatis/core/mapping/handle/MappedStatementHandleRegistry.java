@@ -18,7 +18,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.kabouros.mybatis.core.mapping;
+package com.kabouros.mybatis.core.mapping.handle;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,30 +27,21 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
-import com.kabouros.mybatis.core.mapping.handle.HandleDeleteByPrimaryKeyStatement;
-import com.kabouros.mybatis.core.mapping.handle.HandleDeleteByPrimaryKeysStatement;
-import com.kabouros.mybatis.core.mapping.handle.HandleInsertAllStatement;
-import com.kabouros.mybatis.core.mapping.handle.HandleInsertStatement;
-import com.kabouros.mybatis.core.mapping.handle.HandleSelectByPrimaryKeyStatement;
-import com.kabouros.mybatis.core.mapping.handle.HandleUpdateAllFieldStatement;
-import com.kabouros.mybatis.core.mapping.handle.HandleUpdateNoNullFieldStatement;
-
 /**
  * @author JIANG
  */
 public class MappedStatementHandleRegistry {
 	
-	private static final Map<Class<? extends MappedStatementHandle>,MappedStatementHandle> HANDLE_MAP;
+	private static final Map<Class<? extends MappedStatementHandle>,MappedStatementHandle> HANDLE_MAP = new HashMap<>();
 	
 	static {
-		HANDLE_MAP = new HashMap<>();
 		HANDLE_MAP.put(HandleInsertStatement.class, new HandleInsertStatement());
 		HANDLE_MAP.put(HandleInsertAllStatement.class, new HandleInsertAllStatement());
-		HANDLE_MAP.put(HandleDeleteByPrimaryKeysStatement.class, new HandleDeleteByPrimaryKeysStatement());
-		HANDLE_MAP.put(HandleDeleteByPrimaryKeyStatement.class, new HandleDeleteByPrimaryKeyStatement());
 		HANDLE_MAP.put(HandleUpdateAllFieldStatement.class, new HandleUpdateAllFieldStatement());
 		HANDLE_MAP.put(HandleUpdateNoNullFieldStatement.class, new HandleUpdateNoNullFieldStatement());
 		HANDLE_MAP.put(HandleSelectByPrimaryKeyStatement.class, new HandleSelectByPrimaryKeyStatement());
+		HANDLE_MAP.put(HandleDeleteByPrimaryKeysStatement.class, new HandleDeleteByPrimaryKeysStatement());
+		HANDLE_MAP.put(HandleDeleteByPrimaryKeyStatement.class, new HandleDeleteByPrimaryKeyStatement());
 	}
 	
 	/**
@@ -71,7 +62,4 @@ public class MappedStatementHandleRegistry {
 		
 		private static final MappedStatementHandleRegistry INSTANCE = new MappedStatementHandleRegistry();
 	}
-	
-	
-	
 }

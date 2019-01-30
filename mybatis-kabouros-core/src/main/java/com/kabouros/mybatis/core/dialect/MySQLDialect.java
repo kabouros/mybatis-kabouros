@@ -42,7 +42,7 @@ public class MySQLDialect implements Dialect {
     			body = String.join(" ", "select count(0)",body.substring(fromIndex));
     		}
     	}
-    	String str = new StringBuilder("<select").append(" id=\"").append(selectId).append("-count\"").append(" resultType=\"long\">\n ").append(body).toString();
+    	String str = new StringBuilder("<select").append(" id=\"").append(selectId).append(Pageable.SQL_COUNT_SUFFIX).append("\" resultType=\"long\">\n ").append(body).toString();
 		return str;
 	}
 

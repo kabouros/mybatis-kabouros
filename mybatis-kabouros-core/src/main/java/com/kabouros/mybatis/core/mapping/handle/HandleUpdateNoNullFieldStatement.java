@@ -39,13 +39,12 @@ import org.apache.ibatis.session.Configuration;
 
 import com.kabouros.mybatis.api.mapper.CrudMapper;
 import com.kabouros.mybatis.core.mapping.EntityProperty;
-import com.kabouros.mybatis.core.mapping.MappedStatementHandle;
 import com.kabouros.mybatis.core.mapping.MapperEntityMetadata;
 /**
  * updateNoNullField sql
  * @author JIANG
  */
-public class HandleUpdateNoNullFieldStatement implements MappedStatementHandle {
+class HandleUpdateNoNullFieldStatement implements MappedStatementHandle {
 
 	@Override
 	public void handle(Configuration configuration, Class<?> mapperClass,MapperEntityMetadata<?> entityMetadata) {

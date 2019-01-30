@@ -18,9 +18,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.kabouros.mybatis.core.mapping;
+package com.kabouros.mybatis.core.mapping.handle;
 
 import org.apache.ibatis.session.Configuration;
+
+import com.kabouros.mybatis.core.mapping.MapperEntityMetadata;
 
 /**
  * 
