@@ -47,15 +47,17 @@ class HandleSelectByPrimaryKeyStatement implements MappedStatementHandle {
 
 	@Override
 	public void handle(Configuration configuration, Class<?> mapperClass,MapperEntityMetadata<?> entityMetadata) {
-		StringBuilder sb = new StringBuilder("select * from ").append(entityMetadata.getTableName()).append(" where 1 = 1 ");
-		for(EntityProperty ep:entityMetadata.getEntityPropertys()){
-			if(ep.isPrimarykey()){
-				sb.append("and ").append(ep.getColumnName()).append(" = ").append("#{").append(ep.getName()).append("} ");
-			}
-		}
 		String selectId = String.join(".",mapperClass.getName(),CrudMapper.METHOD_NAME_SELECTBYPRIMARYKEY);
-		ResultMap resultMap = new ResultMap.Builder(configuration,selectId + "-Inline",entityMetadata.getEntityType(), new ArrayList<ResultMapping>(),null).build();
-	    addMappedStatement(configuration,sb.toString(),entityMetadata.getPrimaryKeyType(),selectId,SqlCommandType.SELECT,Arrays.asList(resultMap));
+		if(!configuration.hasStatement(selectId)) {
+			StringBuilder sb = new StringBuilder("select * from ").append(entityMetadata.getTableName()).append(" where 1 = 1 ");
+			for(EntityProperty ep:entityMetadata.getEntityPropertys()){
+				if(ep.isPrimarykey()){
+					sb.append("and ").append(ep.getColumnName()).append(" = ").append("#{").append(ep.getName()).append("} ");
+				}
+			}
+			ResultMap resultMap = new ResultMap.Builder(configuration,selectId + "-Inline",entityMetadata.getEntityType(), new ArrayList<ResultMapping>(),null).build();
+		    addMappedStatement(configuration,sb.toString(),entityMetadata.getPrimaryKeyType(),selectId,SqlCommandType.SELECT,Arrays.asList(resultMap));
+		}
 	}
 	
 	/**

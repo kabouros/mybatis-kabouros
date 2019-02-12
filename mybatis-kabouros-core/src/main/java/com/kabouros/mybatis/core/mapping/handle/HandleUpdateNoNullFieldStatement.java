@@ -48,35 +48,36 @@ class HandleUpdateNoNullFieldStatement implements MappedStatementHandle {
 
 	@Override
 	public void handle(Configuration configuration, Class<?> mapperClass,MapperEntityMetadata<?> entityMetadata) {
-		List<SqlNode> rootSqlNodes = new ArrayList<>();
-		//update
-		rootSqlNodes.add(new StaticTextSqlNode(String.join(" ", "update",entityMetadata.getTableName())));
-		List<SqlNode> ifSqlNodes = new ArrayList<>();
-		//set
-		rootSqlNodes.add(new SetSqlNode(configuration,new MixedSqlNode(ifSqlNodes)));
-		for(EntityProperty ep:entityMetadata.getEntityPropertys()) {
-			if(!ep.isPrimarykey()){
-				StringBuilder sb = new StringBuilder(ep.getColumnName()).append("=#{").append(ep.getName()).append("}").append(",");
-				ifSqlNodes.add(new IfSqlNode(new StaticTextSqlNode(sb.toString()),String.join("!=",ep.getName(),"null")));
-			}
-		}
-		StringBuilder where = new StringBuilder(" where 1 = 1 ");
-		for(EntityProperty ep:entityMetadata.getEntityPropertys()){
-			if(ep.isPrimarykey()){
-				where.append("and ").append(ep.getColumnName()).append(" = ").append("#{").append(ep.getName()).append("} ");
-			}
-		}
-		//where
-		rootSqlNodes.add(new StaticTextSqlNode(where.toString()));
 		String updateId = String.join(".",mapperClass.getName(),CrudMapper.METHOD_NAME_UPDATENOTNULLPROPERTY);
-	    SqlSource sqlSource = new DynamicSqlSource(configuration,new MixedSqlNode(rootSqlNodes));
-	    MappedStatement.Builder builder = new MappedStatement.Builder(configuration,updateId,sqlSource,SqlCommandType.UPDATE);
-	    List<ParameterMapping> parameterMappings = new ArrayList<ParameterMapping>();
-	    builder.parameterMap( new ParameterMap.Builder(configuration,updateId + "-Inline",entityMetadata.getEntityType(),parameterMappings).build());
-	    builder.flushCacheRequired(true);
-	    MappedStatement ms = builder.resultMaps(Collections.emptyList()).build();
-	    configuration.addMappedStatement(ms);
+		if(!configuration.hasStatement(updateId)) {
+			List<SqlNode> rootSqlNodes = new ArrayList<>();
+			//update
+			rootSqlNodes.add(new StaticTextSqlNode(String.join(" ", "update",entityMetadata.getTableName())));
+			List<SqlNode> ifSqlNodes = new ArrayList<>();
+			//set
+			rootSqlNodes.add(new SetSqlNode(configuration,new MixedSqlNode(ifSqlNodes)));
+			for(EntityProperty ep:entityMetadata.getEntityPropertys()) {
+				if(!ep.isPrimarykey()){
+					StringBuilder sb = new StringBuilder(ep.getColumnName()).append("=#{").append(ep.getName()).append("}").append(",");
+					ifSqlNodes.add(new IfSqlNode(new StaticTextSqlNode(sb.toString()),String.join("!=",ep.getName(),"null")));
+				}
+			}
+			StringBuilder where = new StringBuilder(" where 1 = 1 ");
+			for(EntityProperty ep:entityMetadata.getEntityPropertys()){
+				if(ep.isPrimarykey()){
+					where.append("and ").append(ep.getColumnName()).append(" = ").append("#{").append(ep.getName()).append("} ");
+				}
+			}
+			//where
+			rootSqlNodes.add(new StaticTextSqlNode(where.toString()));
+		    SqlSource sqlSource = new DynamicSqlSource(configuration,new MixedSqlNode(rootSqlNodes));
+		    MappedStatement.Builder builder = new MappedStatement.Builder(configuration,updateId,sqlSource,SqlCommandType.UPDATE);
+		    List<ParameterMapping> parameterMappings = new ArrayList<ParameterMapping>();
+		    builder.parameterMap( new ParameterMap.Builder(configuration,updateId + "-Inline",entityMetadata.getEntityType(),parameterMappings).build());
+		    builder.flushCacheRequired(true);
+		    MappedStatement ms = builder.resultMaps(Collections.emptyList()).build();
+		    configuration.addMappedStatement(ms);
+		}
 	}
-
 
 }

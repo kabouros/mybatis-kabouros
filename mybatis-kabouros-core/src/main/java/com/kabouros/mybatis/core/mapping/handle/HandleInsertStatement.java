@@ -44,17 +44,19 @@ class HandleInsertStatement implements MappedStatementHandle{
 
 	@Override
 	public void handle(Configuration configuration, Class<?> mapperClass,MapperEntityMetadata<?> entityMetadata) {
-		StringBuilder sb = new StringBuilder("insert into ").append(entityMetadata.getTableName()).append("(");
-		for(EntityProperty ep:entityMetadata.getEntityPropertys()){
-			sb.append(ep.getColumnName()).append(",");
-		}
-		sb.deleteCharAt(sb.length() - 1).append(") values (");
-		for(EntityProperty ep:entityMetadata.getEntityPropertys()){
-			sb.append("#{").append(ep.getName()).append("},");
-		}
-		sb.deleteCharAt(sb.length() - 1).append(")");
 		String insertId = String.join(".",mapperClass.getName(),CrudMapper.METHOD_NAME_INSERT);
-	    addMappedStatement(configuration,sb.toString(),entityMetadata.getEntityType(),insertId,SqlCommandType.INSERT,null);
+		if(!configuration.hasStatement(insertId)) {
+			StringBuilder sb = new StringBuilder("insert into ").append(entityMetadata.getTableName()).append("(");
+			for(EntityProperty ep:entityMetadata.getEntityPropertys()){
+				sb.append(ep.getColumnName()).append(",");
+			}
+			sb.deleteCharAt(sb.length() - 1).append(") values (");
+			for(EntityProperty ep:entityMetadata.getEntityPropertys()){
+				sb.append("#{").append(ep.getName()).append("},");
+			}
+			sb.deleteCharAt(sb.length() - 1).append(")");
+		    addMappedStatement(configuration,sb.toString(),entityMetadata.getEntityType(),insertId,SqlCommandType.INSERT,null);
+		}
 	}
 	
 	

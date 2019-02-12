@@ -44,15 +44,17 @@ class HandleDeleteByPrimaryKeyStatement implements MappedStatementHandle {
 
 	@Override
 	public void handle(Configuration configuration, Class<?> mapperClass,MapperEntityMetadata<?> entityMetadata) {
-		StringBuilder delete = new StringBuilder("delete from ").append(entityMetadata.getTableName()).append(" where 1 = 1");
-		for(EntityProperty ep:entityMetadata.getEntityPropertys()){
-			if(ep.isPrimarykey()){
-				delete.append(" and ").append(ep.getColumnName()).append(" = #{").append(ep.getName()).append("} ");
-			}
-		}
-		//String deleteSql = delete.deleteCharAt(delete.length() - 1).toString();
 		String deleteId = String.join(".",mapperClass.getName(),CrudMapper.METHOD_NAME_DELETEBYPRIMARYKEY);
-		addMappedStatement(configuration,delete.toString(),entityMetadata.getPrimaryKeyType(),deleteId,SqlCommandType.DELETE,null);
+		if(!configuration.hasStatement(deleteId)) {
+			StringBuilder delete = new StringBuilder("delete from ").append(entityMetadata.getTableName()).append(" where 1 = 1");
+			for(EntityProperty ep:entityMetadata.getEntityPropertys()){
+				if(ep.isPrimarykey()){
+					delete.append(" and ").append(ep.getColumnName()).append(" = #{").append(ep.getName()).append("} ");
+				}
+			}
+			//String deleteSql = delete.deleteCharAt(delete.length() - 1).toString();
+			addMappedStatement(configuration,delete.toString(),entityMetadata.getPrimaryKeyType(),deleteId,SqlCommandType.DELETE,null);
+		}
 	}
 	
 	

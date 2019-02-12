@@ -44,20 +44,22 @@ class HandleUpdateStatement implements MappedStatementHandle{
 
 	@Override
 	public void handle(Configuration configuration, Class<?> mapperClass,MapperEntityMetadata<?> entityMetadata) {
-		StringBuilder sb = new StringBuilder("update ").append(entityMetadata.getTableName()).append(" set ");
-		for(EntityProperty ep:entityMetadata.getEntityPropertys()) {
-			if(!ep.isPrimarykey()){
-				sb.append(ep.getColumnName()).append("=").append("#{").append(ep.getName()).append("},");
-			}
-		}
-		sb.deleteCharAt(sb.length() - 1).append(" where 1 = 1 ");
-		for(EntityProperty ep:entityMetadata.getEntityPropertys()){
-			if(ep.isPrimarykey()){
-				sb.append("and ").append(ep.getColumnName()).append(" = ").append("#{").append(ep.getName()).append("} ");
-			}
-		}
 		String updateId = String.join(".",mapperClass.getName(),CrudMapper.METHOD_NAME_UPDATE);
-		addMappedStatement(configuration,sb.toString(),entityMetadata.getEntityType(),updateId,SqlCommandType.UPDATE,null);
+		if(!configuration.hasStatement(updateId)) {
+			StringBuilder sb = new StringBuilder("update ").append(entityMetadata.getTableName()).append(" set ");
+			for(EntityProperty ep:entityMetadata.getEntityPropertys()) {
+				if(!ep.isPrimarykey()){
+					sb.append(ep.getColumnName()).append("=").append("#{").append(ep.getName()).append("},");
+				}
+			}
+			sb.deleteCharAt(sb.length() - 1).append(" where 1 = 1 ");
+			for(EntityProperty ep:entityMetadata.getEntityPropertys()){
+				if(ep.isPrimarykey()){
+					sb.append("and ").append(ep.getColumnName()).append(" = ").append("#{").append(ep.getName()).append("} ");
+				}
+			}
+			addMappedStatement(configuration,sb.toString(),entityMetadata.getEntityType(),updateId,SqlCommandType.UPDATE,null);
+		}
 	}
 	
 	/**

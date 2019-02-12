@@ -48,27 +48,29 @@ class HandleDeleteByPrimaryKeysStatement implements MappedStatementHandle {
 	
 	@Override
 	public void handle(Configuration configuration, Class<?> mapperClass,MapperEntityMetadata<?> entityMetadata) {
-		List<SqlNode> rootSqlNodes = new ArrayList<>();
-		StringBuilder delete = new StringBuilder("delete from ").append(entityMetadata.getTableName()).append(" where 1 = 1 ");
-		rootSqlNodes.add(new StaticTextSqlNode(delete.toString()));
-		ForEachSqlNode forEachSqlNode;
-		for(EntityProperty ep:entityMetadata.getEntityPropertys()){
-			if(ep.isPrimarykey()){
-				rootSqlNodes.add(new StaticTextSqlNode(String.join("", " and ",ep.getColumnName()," in")));
-				String itemStr = "item";
-				String valueStr = ClassUtil.isBaseType(entityMetadata.getPrimaryKeyType()) ? itemStr : String.join(".", itemStr,ep.getName());
-				forEachSqlNode = new ForEachSqlNode(configuration,new StaticTextSqlNode(String.join("","#{",valueStr,"}")),"list",null,itemStr,"(",")",",");
-				rootSqlNodes.add(forEachSqlNode);
-			}
-		}
-		SqlSource sqlSource = new DynamicSqlSource(configuration,new MixedSqlNode(rootSqlNodes));
 		String insertId = String.join(".",mapperClass.getName(),CrudMapper.METHOD_NAME_DELETEBYPRIMARYKEYS);
-	    MappedStatement.Builder builder = new MappedStatement.Builder(configuration,insertId,sqlSource,SqlCommandType.DELETE);
-	    List<ParameterMapping> parameterMappings = new ArrayList<ParameterMapping>();
-	    builder.parameterMap( new ParameterMap.Builder(configuration,insertId + "-Inline",List.class,parameterMappings).build());
-	    builder.flushCacheRequired(true);
-	    MappedStatement ms = builder.resultMaps(Collections.emptyList()).build();
-	    configuration.addMappedStatement(ms);
+		if(!configuration.hasStatement(insertId)) {
+			List<SqlNode> rootSqlNodes = new ArrayList<>();
+			StringBuilder delete = new StringBuilder("delete from ").append(entityMetadata.getTableName()).append(" where 1 = 1 ");
+			rootSqlNodes.add(new StaticTextSqlNode(delete.toString()));
+			ForEachSqlNode forEachSqlNode;
+			for(EntityProperty ep:entityMetadata.getEntityPropertys()){
+				if(ep.isPrimarykey()){
+					rootSqlNodes.add(new StaticTextSqlNode(String.join("", " and ",ep.getColumnName()," in")));
+					String itemStr = "item";
+					String valueStr = ClassUtil.isBaseType(entityMetadata.getPrimaryKeyType()) ? itemStr : String.join(".", itemStr,ep.getName());
+					forEachSqlNode = new ForEachSqlNode(configuration,new StaticTextSqlNode(String.join("","#{",valueStr,"}")),"list",null,itemStr,"(",")",",");
+					rootSqlNodes.add(forEachSqlNode);
+				}
+			}
+			SqlSource sqlSource = new DynamicSqlSource(configuration,new MixedSqlNode(rootSqlNodes));
+		    MappedStatement.Builder builder = new MappedStatement.Builder(configuration,insertId,sqlSource,SqlCommandType.DELETE);
+		    List<ParameterMapping> parameterMappings = new ArrayList<ParameterMapping>();
+		    builder.parameterMap( new ParameterMap.Builder(configuration,insertId + "-Inline",List.class,parameterMappings).build());
+		    builder.flushCacheRequired(true);
+		    MappedStatement ms = builder.resultMaps(Collections.emptyList()).build();
+		    configuration.addMappedStatement(ms);
+		}
 	}
 
 }

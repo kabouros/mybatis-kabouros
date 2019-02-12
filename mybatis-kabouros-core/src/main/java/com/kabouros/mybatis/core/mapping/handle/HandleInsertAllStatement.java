@@ -47,31 +47,33 @@ class HandleInsertAllStatement implements MappedStatementHandle{
 
 	@Override
 	public void handle(Configuration configuration, Class<?> mapperClass,MapperEntityMetadata<?> entityMetadata) {
-		List<SqlNode> rootSqlNodes = new ArrayList<>();
-		StringBuilder insert = new StringBuilder("insert into ").append(entityMetadata.getTableName()).append(" (");
-		for(EntityProperty ep:entityMetadata.getEntityPropertys()){
-			insert.append(ep.getColumnName()).append(",");
-		}
-		insert.deleteCharAt(insert.length() - 1).append(") values ");
-		//insert
-		rootSqlNodes.add(new StaticTextSqlNode(insert.toString()));
-		//values
-		String itemName = "item";
-		StringBuilder values = new StringBuilder("(");
-		for(EntityProperty ep:entityMetadata.getEntityPropertys()){
-			values.append("#{").append(itemName).append(".").append(ep.getName()).append("},");
-		}
-		values.deleteCharAt(values.length() - 1).append(")");
 		String insertId = String.join(".",mapperClass.getName(),CrudMapper.METHOD_NAME_INSERTALL);
-		ForEachSqlNode forEachSqlNode = new ForEachSqlNode(configuration,new StaticTextSqlNode(values.toString()),"list",null,itemName,null,null,",");
-		rootSqlNodes.add(forEachSqlNode);
-		SqlSource sqlSource = new DynamicSqlSource(configuration,new MixedSqlNode(rootSqlNodes));
-	    MappedStatement.Builder builder = new MappedStatement.Builder(configuration,insertId,sqlSource,SqlCommandType.INSERT);
-	    List<ParameterMapping> parameterMappings = new ArrayList<ParameterMapping>();
-	    builder.parameterMap( new ParameterMap.Builder(configuration,insertId + "-Inline",List.class,parameterMappings).build());
-	    builder.flushCacheRequired(true);
-	    MappedStatement ms = builder.resultMaps(Collections.emptyList()).build();
-	    configuration.addMappedStatement(ms);
+		if(!configuration.hasStatement(insertId)) {
+			List<SqlNode> rootSqlNodes = new ArrayList<>();
+			StringBuilder insert = new StringBuilder("insert into ").append(entityMetadata.getTableName()).append(" (");
+			for(EntityProperty ep:entityMetadata.getEntityPropertys()){
+				insert.append(ep.getColumnName()).append(",");
+			}
+			insert.deleteCharAt(insert.length() - 1).append(") values ");
+			//insert
+			rootSqlNodes.add(new StaticTextSqlNode(insert.toString()));
+			//values
+			String itemName = "item";
+			StringBuilder values = new StringBuilder("(");
+			for(EntityProperty ep:entityMetadata.getEntityPropertys()){
+				values.append("#{").append(itemName).append(".").append(ep.getName()).append("},");
+			}
+			values.deleteCharAt(values.length() - 1).append(")");
+			ForEachSqlNode forEachSqlNode = new ForEachSqlNode(configuration,new StaticTextSqlNode(values.toString()),"list",null,itemName,null,null,",");
+			rootSqlNodes.add(forEachSqlNode);
+			SqlSource sqlSource = new DynamicSqlSource(configuration,new MixedSqlNode(rootSqlNodes));
+		    MappedStatement.Builder builder = new MappedStatement.Builder(configuration,insertId,sqlSource,SqlCommandType.INSERT);
+		    List<ParameterMapping> parameterMappings = new ArrayList<ParameterMapping>();
+		    builder.parameterMap( new ParameterMap.Builder(configuration,insertId + "-Inline",List.class,parameterMappings).build());
+		    builder.flushCacheRequired(true);
+		    MappedStatement ms = builder.resultMaps(Collections.emptyList()).build();
+		    configuration.addMappedStatement(ms);
+		}
 	}
 
 }
