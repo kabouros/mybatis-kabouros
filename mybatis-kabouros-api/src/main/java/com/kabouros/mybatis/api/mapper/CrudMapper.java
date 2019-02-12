@@ -37,6 +37,7 @@ public interface CrudMapper<T,ID extends Serializable> {
 	String METHOD_NAME_SELECTBYPRIMARYKEY = "selectByPrimaryKey";
 	String METHOD_NAME_DELETEBYPRIMARYKEY = "deleteByPrimaryKey";
 	String METHOD_NAME_DELETEBYPRIMARYKEYS = "deleteByPrimaryKeys";
+	String METHOD_NAME_SELECTFIELDBYPRIMARYKEY = "selectFieldByPrimaryKey";
 	/**
 	 * Insert single entity
 	 * @param t entity
@@ -64,24 +65,31 @@ public interface CrudMapper<T,ID extends Serializable> {
 	/**
 	 * Query by primary key
 	 * @param id primary key
-	 * @return number of affected rows
+	 * @return entity
 	 */
 	T selectByPrimaryKey(ID id);
 	
 	/**
 	 * Delete by primary key
-	 * @param id primary Key
+	 * @param id primary key
 	 * @return number of affected rows
 	 */
 	int deleteByPrimaryKey(ID id);
 	
 	/**
 	 * Delete by primary keys
-	 * @param ids id primary Keys
+	 * @param ids id primary keys
 	 * @return number of affected rows
 	 */
 	int deleteByPrimaryKeys(List<ID> ids);
 	
-	//Page<T> selectAllByPageable(Pageable pageable);
+	/**
+	 * Select field by primary key
+	 * @param fieldStr attributes are separated by commas
+	 * @param id primary key
+	 * @return entity
+	 */
+	T selectFieldByPrimaryKey(String fieldStr,ID id);
 	
+	//Page<T> selectAllByPageable(Pageable pageable);
 }

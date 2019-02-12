@@ -40,6 +40,7 @@ public class MappedStatementHandleRegistry {
 		HANDLE_MAP.put(HandleUpdateStatement.class, new HandleUpdateStatement());
 		HANDLE_MAP.put(HandleUpdateNoNullFieldStatement.class, new HandleUpdateNoNullFieldStatement());
 		HANDLE_MAP.put(HandleSelectByPrimaryKeyStatement.class, new HandleSelectByPrimaryKeyStatement());
+		HANDLE_MAP.put(HandleSelectFieldByPrimaryKeyStatement.class, new HandleSelectFieldByPrimaryKeyStatement());
 		HANDLE_MAP.put(HandleDeleteByPrimaryKeysStatement.class, new HandleDeleteByPrimaryKeysStatement());
 		HANDLE_MAP.put(HandleDeleteByPrimaryKeyStatement.class, new HandleDeleteByPrimaryKeyStatement());
 	}
