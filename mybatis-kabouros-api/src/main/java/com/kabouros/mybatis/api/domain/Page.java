@@ -49,7 +49,7 @@ public class Page<T> implements Iterable<T>,Serializable{
 	}
 
 	public Page(List<T> content, Pageable pageable,long total) {
-		Assert.notEmpty(content, "Content must not be null!");
+		Assert.notNull(content, "Page content be null");
 		this.content.addAll(content);
 		this.pageable = pageable;
 		this.totalCount = total;
