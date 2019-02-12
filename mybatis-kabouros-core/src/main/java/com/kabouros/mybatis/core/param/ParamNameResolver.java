@@ -86,10 +86,10 @@ public class ParamNameResolver {
 			}
 			if (Pageable.class.isAssignableFrom(paramTypes[paramIndex])) {
 				pageableArgsIndex = paramIndex;
-				if (null == name) {
+				/*if (null == name) {*/
 					name = Pageable.NAME;
 					hasParamAnnotation = true;
-				}
+				/*}*/
 			}
 			if (name == null) {
 				// @Param was not specified.
