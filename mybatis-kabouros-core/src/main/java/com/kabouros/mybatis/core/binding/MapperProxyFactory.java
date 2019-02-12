@@ -86,10 +86,10 @@ public class MapperProxyFactory<T> {
 				throw new AnnotationMapperException(mapperEntityMetadata.getEntityType().getName()+" no identifier<@Id> specified");
 			}
 			if(primaryKeyCount > 1 && ClassUtil.isBaseType(mapperEntityMetadata.getPrimaryKeyType())) {
-				throw new AnnotationMapperException(mapperInterface.getName()+" error superclass identifier generic; composite primary key suggested use "+mapperEntityMetadata.getEntityType().getSimpleName());
+				throw new AnnotationMapperException(mapperInterface.getName()+" error superclass identifier generic, composite primary key suggested use "+mapperEntityMetadata.getEntityType().getSimpleName());
 			}
 			if(primaryKeyCount == 1 && !ClassUtil.isBaseType(mapperEntityMetadata.getPrimaryKeyType())) {
-				throw new AnnotationMapperException(mapperInterface.getName()+" error superclass identifier generic; composite primary key suggested use "+mapperEntityMetadata.getEntityType().getSimpleName());
+				throw new AnnotationMapperException(mapperInterface.getName()+" error superclass identifier generic");
 			}
 			List<MappedStatementHandle> mappedStatementHandles = MappedStatementHandleRegistry.getInstance().getRegistry();
 			for(MappedStatementHandle handle:mappedStatementHandles) {

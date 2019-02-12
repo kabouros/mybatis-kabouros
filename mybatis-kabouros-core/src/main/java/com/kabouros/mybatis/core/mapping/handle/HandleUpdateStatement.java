@@ -40,7 +40,7 @@ import com.kabouros.mybatis.core.mapping.MapperEntityMetadata;
  * updateAllField sql
  * @author JIANG
  */
-class HandleUpdateAllFieldStatement implements MappedStatementHandle{
+class HandleUpdateStatement implements MappedStatementHandle{
 
 	@Override
 	public void handle(Configuration configuration, Class<?> mapperClass,MapperEntityMetadata<?> entityMetadata) {
@@ -56,7 +56,7 @@ class HandleUpdateAllFieldStatement implements MappedStatementHandle{
 				sb.append("and ").append(ep.getColumnName()).append(" = ").append("#{").append(ep.getName()).append("} ");
 			}
 		}
-		String updateId = String.join(".",mapperClass.getName(),CrudMapper.METHOD_NAME_UPDATEALLFIELD);
+		String updateId = String.join(".",mapperClass.getName(),CrudMapper.METHOD_NAME_UPDATE);
 		addMappedStatement(configuration,sb.toString(),entityMetadata.getEntityType(),updateId,SqlCommandType.UPDATE,null);
 	}
 	

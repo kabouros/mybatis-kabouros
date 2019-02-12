@@ -37,7 +37,7 @@ public class MappedStatementHandleRegistry {
 	static {
 		HANDLE_MAP.put(HandleInsertStatement.class, new HandleInsertStatement());
 		HANDLE_MAP.put(HandleInsertAllStatement.class, new HandleInsertAllStatement());
-		HANDLE_MAP.put(HandleUpdateAllFieldStatement.class, new HandleUpdateAllFieldStatement());
+		HANDLE_MAP.put(HandleUpdateStatement.class, new HandleUpdateStatement());
 		HANDLE_MAP.put(HandleUpdateNoNullFieldStatement.class, new HandleUpdateNoNullFieldStatement());
 		HANDLE_MAP.put(HandleSelectByPrimaryKeyStatement.class, new HandleSelectByPrimaryKeyStatement());
 		HANDLE_MAP.put(HandleDeleteByPrimaryKeysStatement.class, new HandleDeleteByPrimaryKeysStatement());

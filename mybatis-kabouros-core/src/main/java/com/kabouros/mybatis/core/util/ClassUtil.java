@@ -62,7 +62,7 @@ public class ClassUtil {
 	}
 	
 	public static boolean isBaseType(Class<?> clazz) {
-	    if (clazz.equals(java.lang.Character.class) ||
+	    if (java.lang.CharSequence.class.isAssignableFrom(clazz) ||
 	        clazz.equals(java.lang.Integer.class) || clazz.equals(int.class) ||
 	    	clazz.equals(java.lang.Long.class) || clazz.equals(long.class) ||
 	        clazz.equals(java.lang.Double.class) || clazz.equals(double.class) ||

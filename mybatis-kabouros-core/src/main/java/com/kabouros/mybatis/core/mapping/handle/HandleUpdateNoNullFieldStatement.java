@@ -68,7 +68,7 @@ class HandleUpdateNoNullFieldStatement implements MappedStatementHandle {
 		}
 		//where
 		rootSqlNodes.add(new StaticTextSqlNode(where.toString()));
-		String updateId = String.join(".",mapperClass.getName(),CrudMapper.METHOD_NAME_UPDATENONULLFIELD);
+		String updateId = String.join(".",mapperClass.getName(),CrudMapper.METHOD_NAME_UPDATENOTNULLPROPERTY);
 	    SqlSource sqlSource = new DynamicSqlSource(configuration,new MixedSqlNode(rootSqlNodes));
 	    MappedStatement.Builder builder = new MappedStatement.Builder(configuration,updateId,sqlSource,SqlCommandType.UPDATE);
 	    List<ParameterMapping> parameterMappings = new ArrayList<ParameterMapping>();

@@ -32,8 +32,8 @@ public interface CrudMapper<T,ID extends Serializable> {
 	
 	String METHOD_NAME_INSERT = "insert";
 	String METHOD_NAME_INSERTALL = "insertAll";
-	String METHOD_NAME_UPDATEALLFIELD = "updateAllField";
-	String METHOD_NAME_UPDATENONULLFIELD = "updateNoNullField";
+	String METHOD_NAME_UPDATE = "update";
+	String METHOD_NAME_UPDATENOTNULLPROPERTY = "updateNotNullProperty";
 	String METHOD_NAME_SELECTBYPRIMARYKEY = "selectByPrimaryKey";
 	String METHOD_NAME_DELETEBYPRIMARYKEY = "deleteByPrimaryKey";
 	String METHOD_NAME_DELETEBYPRIMARYKEYS = "deleteByPrimaryKeys";
@@ -50,17 +50,17 @@ public interface CrudMapper<T,ID extends Serializable> {
 	 */
 	int insertAll(List<T> list);
 	/**
-	 * Update entity not null field
+	 * Update entity not null property
 	 * @param t entity
 	 * @return number of affected rows
 	 */
-	int updateNoNullField(T t);
+	int updateNotNullProperty(T t);
 	/**
 	 * Update entity all field
 	 * @param t entity
 	 * @return number of affected rows
 	 */
-	int updateAllField(T t);
+	int update(T t);
 	/**
 	 * Query by primary key
 	 * @param id primary key
