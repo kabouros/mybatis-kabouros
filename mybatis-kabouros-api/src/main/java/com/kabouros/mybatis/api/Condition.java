@@ -18,25 +18,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.kabouros.mybatis.api.annotation;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
-import java.lang.annotation.Documented;
-
+package com.kabouros.mybatis.api;
 
 /**
- * Not mapping database table fields
  * @author JIANG
  */
-@Target({ METHOD, FIELD })
-@Retention(RUNTIME)
-@Documented
-public @interface Transient {
-	
+public interface Condition {
+
 }
