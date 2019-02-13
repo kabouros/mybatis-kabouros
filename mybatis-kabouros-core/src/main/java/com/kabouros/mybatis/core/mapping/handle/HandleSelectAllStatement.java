@@ -22,66 +22,35 @@ package com.kabouros.mybatis.core.mapping.handle;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.mapping.ResultMapping;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.SqlSource;
-import org.apache.ibatis.scripting.xmltags.DynamicSqlSource;
-import org.apache.ibatis.scripting.xmltags.MixedSqlNode;
-import org.apache.ibatis.scripting.xmltags.TextSqlNode;
+import org.apache.ibatis.scripting.defaults.RawSqlSource;
+import org.apache.ibatis.scripting.xmltags.StaticTextSqlNode;
 import org.apache.ibatis.session.Configuration;
 
 import com.kabouros.mybatis.api.mapper.CrudMapper;
-import com.kabouros.mybatis.core.mapping.EntityProperty;
 import com.kabouros.mybatis.core.mapping.MapperEntityMetadata;
-import com.kabouros.mybatis.core.util.ClassUtil;
 
 /**
- * selectFieldByPrimaryKey sql
+ * selectAll sql
  * @author JIANG
  */
-class HandleSelectFieldByPrimaryKeyStatement implements MappedStatementHandle {
+class HandleSelectAllStatement implements MappedStatementHandle {
 
 	@Override
 	public void handle(Configuration configuration, Class<?> mapperClass,MapperEntityMetadata<?> entityMetadata) {
-		String selectId = String.join(".",mapperClass.getName(),CrudMapper.METHOD_NAME_SELECTFIELDBYPRIMARYKEY);
+		String selectId = String.join(".",mapperClass.getName(),CrudMapper.METHOD_NAME_SELECTALL);
 		if(!configuration.hasStatement(selectId)) {
-			StringBuilder sb = new StringBuilder("select ${fieldStr} from ").append(entityMetadata.getTableName()).append(" where 1 = 1 ");
-			boolean isBaseType = ClassUtil.isBaseType(entityMetadata.getPrimaryKeyType());
-			for(EntityProperty ep:entityMetadata.getEntityPropertys()){
-				if(ep.isPrimarykey()){
-					sb.append("and ").append(ep.getColumnName()).append(" = ");
-					if(isBaseType){
-						sb.append("#{id}");
-					}else{
-						sb.append("#{id.").append(ep.getName()).append("} ");
-					}
-				}
-			}
+			StringBuilder sb = new StringBuilder("select * from ").append(entityMetadata.getTableName());
 			ResultMap resultMap = new ResultMap.Builder(configuration,selectId + "-Inline",entityMetadata.getEntityType(), new ArrayList<ResultMapping>(),null).build();
-		    addMappedStatement(configuration,sb.toString(),entityMetadata.getPrimaryKeyType(),selectId,SqlCommandType.SELECT,Arrays.asList(resultMap));
+		    SqlSource sqlSource = new RawSqlSource(configuration,new StaticTextSqlNode(sb.toString()),null);
+		    MappedStatement.Builder builder = new MappedStatement.Builder(configuration,selectId,sqlSource,SqlCommandType.SELECT);
+		    MappedStatement ms = builder.resultMaps(Arrays.asList(resultMap)).build();
+		    configuration.addMappedStatement(ms);
 		}
-	}
-	
-	/**
-	 * @param sql
-	 * @param parameterType
-	 * @param id
-	 * @param sqlCommandType
-	 * @param resultMaps
-	 */
-	protected void addMappedStatement(Configuration configuration, String sql,Class<?> parameterType,String id,SqlCommandType sqlCommandType,List<ResultMap> resultMaps){
-	    MixedSqlNode sqlNode = new MixedSqlNode(Arrays.asList(new TextSqlNode(sql)));
-	    SqlSource sqlSource = new DynamicSqlSource(configuration,sqlNode);
-	    MappedStatement.Builder builder = new MappedStatement.Builder(configuration,id,sqlSource,sqlCommandType);
-	    if(null == resultMaps){
-	    	resultMaps = Collections.emptyList();
-	    }
-	    MappedStatement ms = builder.resultMaps(resultMaps).build();
-	    configuration.addMappedStatement(ms);
 	}
 }
