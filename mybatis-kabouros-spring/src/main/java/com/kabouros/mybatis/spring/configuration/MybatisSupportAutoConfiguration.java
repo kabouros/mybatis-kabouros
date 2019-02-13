@@ -34,18 +34,21 @@ import org.mybatis.spring.boot.autoconfigure.SpringBootVFS;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import com.kabouros.mybatis.core.config.SessionConfiguration;
+import com.kabouros.mybatis.core.mapping.handle.MappedStatementHandleAssembleAdapter;
 import com.kabouros.mybatis.spring.session.SqlSessionFactoryBean;
 
 /**
  * @author JIANG
  */
 @org.springframework.context.annotation.Configuration
+@Import(DelegatingMybatisKabourosConfigurer.class)
 public class MybatisSupportAutoConfiguration {
 
 	private final MybatisProperties properties;
@@ -57,16 +60,20 @@ public class MybatisSupportAutoConfiguration {
 	private final DatabaseIdProvider databaseIdProvider;
 
 	private final List<ConfigurationCustomizer> configurationCustomizers;
+	
+	private final MappedStatementHandleAssembleAdapter mappedStatementHandleAssembleAdapter;
 
 	public MybatisSupportAutoConfiguration(MybatisProperties properties,
 			ObjectProvider<Interceptor[]> interceptorsProvider, ResourceLoader resourceLoader,
 			ObjectProvider<DatabaseIdProvider> databaseIdProvider,
-			ObjectProvider<List<ConfigurationCustomizer>> configurationCustomizersProvider) {
+			ObjectProvider<List<ConfigurationCustomizer>> configurationCustomizersProvider,
+			MappedStatementHandleAssembleAdapter mappedStatementHandleAssembleAdapter) {
 		this.properties = properties;
 		this.interceptors = interceptorsProvider.getIfAvailable();
 		this.resourceLoader = resourceLoader;
 		this.databaseIdProvider = databaseIdProvider.getIfAvailable();
 		this.configurationCustomizers = configurationCustomizersProvider.getIfAvailable();
+		this.mappedStatementHandleAssembleAdapter = mappedStatementHandleAssembleAdapter;
 	}
 
 	/**
@@ -115,12 +122,12 @@ public class MybatisSupportAutoConfiguration {
 	private void applyConfiguration(SqlSessionFactoryBean factory) {
 		Configuration configuration = this.properties.getConfiguration();
 		if(null != configuration) {
-			Configuration sessionConfiguration = new SessionConfiguration();
+			Configuration sessionConfiguration = new SessionConfiguration(mappedStatementHandleAssembleAdapter);
 			BeanUtils.copyProperties(configuration,sessionConfiguration);
 			configuration = sessionConfiguration;
 		}
 		if (configuration == null && !StringUtils.hasText(this.properties.getConfigLocation())) {
-			configuration = new SessionConfiguration();
+			configuration = new SessionConfiguration(mappedStatementHandleAssembleAdapter);
 		}
 		if (configuration != null && !CollectionUtils.isEmpty(this.configurationCustomizers)) {
 			for (ConfigurationCustomizer customizer : this.configurationCustomizers) {

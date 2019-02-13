@@ -43,7 +43,7 @@ import com.kabouros.mybatis.core.mapping.MapperEntityMetadata;
  * selectByPrimaryKey sql
  * @author JIANG
  */
-class HandleSelectByPrimaryKeyStatement implements MappedStatementHandle {
+public class HandleSelectByPrimaryKeyStatement implements MappedStatementHandle {
 
 	@Override
 	public void handle(Configuration configuration, Class<?> mapperClass,MapperEntityMetadata<?> entityMetadata) {

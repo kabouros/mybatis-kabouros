@@ -44,7 +44,7 @@ import com.kabouros.mybatis.core.util.ClassUtil;
  * selectFieldByPrimaryKey sql
  * @author JIANG
  */
-class HandleSelectFieldByPrimaryKeyStatement implements MappedStatementHandle {
+public class HandleSelectFieldByPrimaryKeyStatement implements MappedStatementHandle {
 
 	@Override
 	public void handle(Configuration configuration, Class<?> mapperClass,MapperEntityMetadata<?> entityMetadata) {

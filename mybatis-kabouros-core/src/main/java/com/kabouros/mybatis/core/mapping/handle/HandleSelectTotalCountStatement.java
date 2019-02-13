@@ -39,11 +39,11 @@ import com.kabouros.mybatis.core.mapping.MapperEntityMetadata;
  * count sql
  * @author JIANG
  */
-class HandleCountStatement implements MappedStatementHandle {
+public class HandleSelectTotalCountStatement implements MappedStatementHandle {
 
 	@Override
 	public void handle(Configuration configuration, Class<?> mapperClass,MapperEntityMetadata<?> entityMetadata) {
-		String selectId = String.join(".",mapperClass.getName(),CrudMapper.METHOD_NAME_COUNT);
+		String selectId = String.join(".",mapperClass.getName(),CrudMapper.METHOD_NAME_SELECTTOTALCOUNT);
 		if(!configuration.hasStatement(selectId)) {
 			StringBuilder sb = new StringBuilder("select count(0) from ").append(entityMetadata.getTableName());
 			ResultMap resultMap = new ResultMap.Builder(configuration,selectId + "-Inline",long.class, new ArrayList<ResultMapping>(),null).build();

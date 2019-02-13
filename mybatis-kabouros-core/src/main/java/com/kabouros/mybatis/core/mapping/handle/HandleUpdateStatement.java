@@ -40,7 +40,7 @@ import com.kabouros.mybatis.core.mapping.MapperEntityMetadata;
  * updateAllField sql
  * @author JIANG
  */
-class HandleUpdateStatement implements MappedStatementHandle{
+public class HandleUpdateStatement implements MappedStatementHandle{
 
 	@Override
 	public void handle(Configuration configuration, Class<?> mapperClass,MapperEntityMetadata<?> entityMetadata) {

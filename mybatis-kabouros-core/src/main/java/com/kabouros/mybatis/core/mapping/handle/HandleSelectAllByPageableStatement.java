@@ -46,7 +46,7 @@ import com.kabouros.mybatis.core.mapping.MapperEntityMetadata;
  * selectAllByPageable sql
  * @author JIANG
  */
-class HandleSelectAllByPageableStatement implements MappedStatementHandle {
+public class HandleSelectAllByPageableStatement implements MappedStatementHandle {
 
 	
 	@Override

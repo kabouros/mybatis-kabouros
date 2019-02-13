@@ -24,6 +24,7 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 
 import com.kabouros.mybatis.core.binding.MapperRegistry;
+import com.kabouros.mybatis.core.mapping.handle.MappedStatementHandleAssembleAdapter;
 
 
 /**
@@ -32,7 +33,11 @@ import com.kabouros.mybatis.core.binding.MapperRegistry;
  */
 public class SessionConfiguration extends Configuration {
 
-	protected final MapperRegistry mapperRegistry = new MapperRegistry(this);
+	protected final MapperRegistry mapperRegistry;
+	
+	public SessionConfiguration(MappedStatementHandleAssembleAdapter mappedStatementHandleAssembleAdapter){
+		this.mapperRegistry = new MapperRegistry(this,mappedStatementHandleAssembleAdapter);
+	}
 
 	@Override
 	public MapperRegistry getMapperRegistry() {

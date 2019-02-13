@@ -30,6 +30,8 @@ import org.apache.ibatis.builder.annotation.MapperAnnotationBuilder;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 
+import com.kabouros.mybatis.core.mapping.handle.MappedStatementHandleAssembleAdapter;
+
 /**
  * Override getMapper,hasMapper,addMapper,getMappers function,
  * Replace the original MapperProxyFactory.
@@ -40,13 +42,15 @@ import org.apache.ibatis.session.SqlSession;
  * @author JIANG
  */
 public class MapperRegistry extends org.apache.ibatis.binding.MapperRegistry {
-
+	
+	private final MappedStatementHandleAssembleAdapter mappedStatementHandleAssembleAdapter;
 	private final Configuration config;
 	private final Map<Class<?>, MapperProxyFactory<?>> knownMappers = new HashMap<>();
 
-	public MapperRegistry(Configuration config) {
+	public MapperRegistry(Configuration config,MappedStatementHandleAssembleAdapter mappedStatementHandleAssembleAdapter) {
 		super(config);
 		this.config = config;
+		this.mappedStatementHandleAssembleAdapter = mappedStatementHandleAssembleAdapter;
 	}
 
 	@Override
@@ -76,7 +80,7 @@ public class MapperRegistry extends org.apache.ibatis.binding.MapperRegistry {
 		    }
 		    boolean loadCompleted = false;
 		    try {
-		        knownMappers.put(type, new MapperProxyFactory<>(type));
+		        knownMappers.put(type, new MapperProxyFactory<>(type,mappedStatementHandleAssembleAdapter));
 		        // It's important that the type is added before the parser is run
 		        // otherwise the binding may automatically be attempted by the
 		        // mapper parser. If the type is already known, it won't try.

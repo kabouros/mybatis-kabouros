@@ -44,7 +44,7 @@ import com.kabouros.mybatis.core.mapping.MapperEntityMetadata;
  * updateNoNullField sql
  * @author JIANG
  */
-class HandleUpdateNoNullFieldStatement implements MappedStatementHandle {
+public class HandleUpdateNoNullFieldStatement implements MappedStatementHandle {
 
 	@Override
 	public void handle(Configuration configuration, Class<?> mapperClass,MapperEntityMetadata<?> entityMetadata) {

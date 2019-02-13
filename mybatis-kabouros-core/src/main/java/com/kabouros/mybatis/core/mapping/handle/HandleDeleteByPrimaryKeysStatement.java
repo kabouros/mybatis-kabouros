@@ -44,7 +44,7 @@ import com.kabouros.mybatis.core.util.ClassUtil;
  * deleteByPrimaryKey sql
  * @author JIANG
  */
-class HandleDeleteByPrimaryKeysStatement implements MappedStatementHandle {
+public class HandleDeleteByPrimaryKeysStatement implements MappedStatementHandle {
 	
 	@Override
 	public void handle(Configuration configuration, Class<?> mapperClass,MapperEntityMetadata<?> entityMetadata) {

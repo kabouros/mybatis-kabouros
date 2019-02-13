@@ -43,7 +43,7 @@ public interface CrudMapper<T,ID extends Serializable> {
 	String METHOD_NAME_SELECTFIELDBYPRIMARYKEY = "selectFieldByPrimaryKey";
 	String METHOD_NAME_SELECTALL = "selectAll";
 	String METHOD_NAME_SELECTALLBYPAGEABLE = "selectAllByPageable";
-	String METHOD_NAME_COUNT = "selectTotalCount";
+	String METHOD_NAME_SELECTTOTALCOUNT = "selectTotalCount";
 	
 	/**
 	 * Insert single entity

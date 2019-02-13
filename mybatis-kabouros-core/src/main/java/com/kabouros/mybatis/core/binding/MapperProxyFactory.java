@@ -30,11 +30,12 @@ import org.apache.ibatis.session.SqlSession;
 
 import com.kabouros.mybatis.api.exception.AnnotationMapperException;
 import com.kabouros.mybatis.api.mapper.CrudMapper;
+import com.kabouros.mybatis.api.util.CollectionUtils;
 import com.kabouros.mybatis.core.mapping.DefaultMapperEntityMetadata;
 import com.kabouros.mybatis.core.mapping.EntityProperty;
 import com.kabouros.mybatis.core.mapping.MapperEntityMetadata;
 import com.kabouros.mybatis.core.mapping.handle.MappedStatementHandle;
-import com.kabouros.mybatis.core.mapping.handle.MappedStatementHandleRegistry;
+import com.kabouros.mybatis.core.mapping.handle.MappedStatementHandleAssembleAdapter;
 import com.kabouros.mybatis.core.util.ClassUtil;
 
 /**
@@ -44,13 +45,15 @@ import com.kabouros.mybatis.core.util.ClassUtil;
  */
 public class MapperProxyFactory<T> {
 
+	private final MappedStatementHandleAssembleAdapter mappedStatementHandleAssembleAdapter;
 	private final Class<T> mapperInterface;
 	private final Map<Method, MapperMethod> methodCache = new ConcurrentHashMap<>();
 	private final MapperEntityMetadata<?> mapperEntityMetadata;
 
-    public MapperProxyFactory(Class<T> mapperInterface) {
+    public MapperProxyFactory(Class<T> mapperInterface,MappedStatementHandleAssembleAdapter mappedStatementHandleAssembleAdapter) {
 	    this.mapperInterface = mapperInterface;
 	    this.mapperEntityMetadata = new DefaultMapperEntityMetadata<>(mapperInterface);
+	    this.mappedStatementHandleAssembleAdapter = mappedStatementHandleAssembleAdapter;
 	}
 
     public Class<T> getMapperInterface() {
@@ -73,7 +76,7 @@ public class MapperProxyFactory<T> {
     }
     
     private void mappedStatementHandleRegistry(SqlSession sqlSession){
-		if(CrudMapper.class.isAssignableFrom(mapperInterface)){
+		if(CrudMapper.class.isAssignableFrom(mapperInterface)&& null != mappedStatementHandleAssembleAdapter && !CollectionUtils.isEmpty(mappedStatementHandleAssembleAdapter.getMappedStatementHandles())){
 			int primaryKeyCount = 0;
 			for(EntityProperty ep:mapperEntityMetadata.getEntityPropertys()) {
 				if(ep.isPrimarykey()) {
@@ -89,7 +92,7 @@ public class MapperProxyFactory<T> {
 			if(primaryKeyCount == 1 && !ClassUtil.isBaseType(mapperEntityMetadata.getPrimaryKeyType())) {
 				throw new AnnotationMapperException(mapperInterface.getName()+" error superclass identifier generic");
 			}
-			List<MappedStatementHandle> mappedStatementHandles = MappedStatementHandleRegistry.getInstance().getRegistry();
+			List<MappedStatementHandle> mappedStatementHandles = mappedStatementHandleAssembleAdapter.getMappedStatementHandles();
 			for(MappedStatementHandle handle:mappedStatementHandles) {
 				handle.handle(sqlSession.getConfiguration(), mapperInterface, mapperEntityMetadata);
 			}

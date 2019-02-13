@@ -63,6 +63,7 @@ import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy;
 
 import com.kabouros.mybatis.core.builder.XMLMapperBuilder;
 import com.kabouros.mybatis.core.config.SessionConfiguration;
+import com.kabouros.mybatis.core.mapping.handle.MappedStatementHandleAssembleAdapter;
 
 /**
  * {@code FactoryBean} that creates an MyBatis {@code SqlSessionFactory}. This
@@ -76,7 +77,7 @@ import com.kabouros.mybatis.core.config.SessionConfiguration;
  * multiple databases or when container managed transactions (CMT) are being
  * used.
  * 
- * Loading SessionConfiguration,XMLMapperBuilder
+ * Loading SessionConfiguration,XMLMapperBuilder,MappedStatementHandleAssembleAdapter
  * 
  * @author Putthibong Boonbong
  * @author Hunter Presnall
@@ -91,6 +92,13 @@ import com.kabouros.mybatis.core.config.SessionConfiguration;
 public class SqlSessionFactoryBean implements FactoryBean<SqlSessionFactory>, InitializingBean, ApplicationListener<ApplicationEvent> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SqlSessionFactoryBean.class);
+	
+	private MappedStatementHandleAssembleAdapter mappedStatementHandleAssembleAdapter;
+	
+	public void setMappedStatementHandleAssembleAdapter(MappedStatementHandleAssembleAdapter mappedStatementHandleAssembleAdapter) {
+			
+		this.mappedStatementHandleAssembleAdapter = mappedStatementHandleAssembleAdapter;
+	}
 
 	private Resource configLocation;
 
@@ -462,7 +470,7 @@ public class SqlSessionFactoryBean implements FactoryBean<SqlSessionFactory>, In
 			targetConfiguration = xmlConfigBuilder.getConfiguration();
 		} else {
 			LOGGER.debug(() -> "Property 'configuration' or 'configLocation' not specified, using default MyBatis Configuration");
-			targetConfiguration = new SessionConfiguration();
+			targetConfiguration = new SessionConfiguration(mappedStatementHandleAssembleAdapter);
 			Optional.ofNullable(this.configurationProperties).ifPresent(targetConfiguration::setVariables);
 		}
 
