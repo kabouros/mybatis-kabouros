@@ -33,13 +33,18 @@ import org.apache.ibatis.scripting.xmltags.StaticTextSqlNode;
 import org.apache.ibatis.session.Configuration;
 
 import com.kabouros.mybatis.api.mapper.CrudMapper;
+import com.kabouros.mybatis.core.dialect.Dialect;
 import com.kabouros.mybatis.core.mapping.MapperEntityMetadata;
 
 /**
  * count sql
  * @author JIANG
  */
-public class HandleSelectTotalCountStatement implements MappedStatementHandle {
+public class HandleSelectTotalCountStatement extends AbstractMappedStatementHandle implements MappedStatementHandle {
+
+	public HandleSelectTotalCountStatement(Dialect dialect) {
+		super(dialect);
+	}
 
 	@Override
 	public void handle(Configuration configuration, Class<?> mapperClass,MapperEntityMetadata<?> entityMetadata) {

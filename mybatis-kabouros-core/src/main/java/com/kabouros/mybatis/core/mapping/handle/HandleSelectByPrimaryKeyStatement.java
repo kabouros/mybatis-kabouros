@@ -36,6 +36,7 @@ import org.apache.ibatis.scripting.xmltags.StaticTextSqlNode;
 import org.apache.ibatis.session.Configuration;
 
 import com.kabouros.mybatis.api.mapper.CrudMapper;
+import com.kabouros.mybatis.core.dialect.Dialect;
 import com.kabouros.mybatis.core.mapping.EntityProperty;
 import com.kabouros.mybatis.core.mapping.MapperEntityMetadata;
 
@@ -43,7 +44,11 @@ import com.kabouros.mybatis.core.mapping.MapperEntityMetadata;
  * selectByPrimaryKey sql
  * @author JIANG
  */
-public class HandleSelectByPrimaryKeyStatement implements MappedStatementHandle {
+public class HandleSelectByPrimaryKeyStatement extends AbstractMappedStatementHandle implements MappedStatementHandle {
+
+	public HandleSelectByPrimaryKeyStatement(Dialect dialect) {
+		super(dialect);
+	}
 
 	@Override
 	public void handle(Configuration configuration, Class<?> mapperClass,MapperEntityMetadata<?> entityMetadata) {

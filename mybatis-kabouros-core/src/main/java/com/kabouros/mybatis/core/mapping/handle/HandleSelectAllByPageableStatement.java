@@ -22,7 +22,6 @@ package com.kabouros.mybatis.core.mapping.handle;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ResultMap;
@@ -30,26 +29,26 @@ import org.apache.ibatis.mapping.ResultMapping;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.scripting.defaults.RawSqlSource;
-import org.apache.ibatis.scripting.xmltags.DynamicSqlSource;
-import org.apache.ibatis.scripting.xmltags.IfSqlNode;
-import org.apache.ibatis.scripting.xmltags.MixedSqlNode;
-import org.apache.ibatis.scripting.xmltags.SqlNode;
 import org.apache.ibatis.scripting.xmltags.StaticTextSqlNode;
-import org.apache.ibatis.scripting.xmltags.TextSqlNode;
 import org.apache.ibatis.session.Configuration;
 
 import com.kabouros.mybatis.api.domain.Pageable;
 import com.kabouros.mybatis.api.mapper.CrudMapper;
+import com.kabouros.mybatis.core.dialect.Dialect;
 import com.kabouros.mybatis.core.mapping.MapperEntityMetadata;
 
 /**
  * selectAllByPageable sql
  * @author JIANG
  */
-public class HandleSelectAllByPageableStatement implements MappedStatementHandle {
+public class HandleSelectAllByPageableStatement extends AbstractMappedStatementHandle implements MappedStatementHandle {
+	
+	public HandleSelectAllByPageableStatement(Dialect dialect) {
+		super(dialect);
+	}
 
 	
-	@Override
+	/*@Override
 	public void handle(Configuration configuration, Class<?> mapperClass,MapperEntityMetadata<?> entityMetadata) {
 		String selectId = String.join(".",mapperClass.getName(),CrudMapper.METHOD_NAME_SELECTALLBYPAGEABLE);
 		if(!configuration.hasStatement(selectId)) {
@@ -62,6 +61,25 @@ public class HandleSelectAllByPageableStatement implements MappedStatementHandle
 			ResultMap resultMap = new ResultMap.Builder(configuration,selectId + "-Inline",entityMetadata.getEntityType(), new ArrayList<ResultMapping>(),null).build();
 		    MixedSqlNode sqlNode = new MixedSqlNode(rootSqlNodes);
 		    SqlSource sqlSource = new DynamicSqlSource(configuration,sqlNode);
+		    MappedStatement.Builder builder = new MappedStatement.Builder(configuration,selectId,sqlSource,SqlCommandType.SELECT);
+		    MappedStatement ms = builder.resultMaps(Arrays.asList(resultMap)).build();
+		    configuration.addMappedStatement(ms);
+		    //count sql
+			StringBuilder countSql = new StringBuilder("select count(0) from ").append(entityMetadata.getTableName());
+			ResultMap countResultMap = new ResultMap.Builder(configuration,selectId + "-Inline",long.class, new ArrayList<ResultMapping>(),null).build();
+		    SqlSource countSqlSource = new RawSqlSource(configuration,new StaticTextSqlNode(countSql.toString()),null);
+		    MappedStatement.Builder countBuilder = new MappedStatement.Builder(configuration,String.join("",selectId,Pageable.SQL_COUNT_SUFFIX),countSqlSource,SqlCommandType.SELECT);
+		    MappedStatement countMs = countBuilder.resultMaps(Arrays.asList(countResultMap)).build();
+		    configuration.addMappedStatement(countMs);
+		}
+	}*/
+
+	@Override
+	public void handle(Configuration configuration, Class<?> mapperClass,MapperEntityMetadata<?> entityMetadata) {
+		String selectId = String.join(".",mapperClass.getName(),CrudMapper.METHOD_NAME_SELECTALLBYPAGEABLE);
+		if(!configuration.hasStatement(selectId)) {
+			SqlSource sqlSource = dialect.createSelectByPageableSqlSource(configuration, selectId, entityMetadata);
+			ResultMap resultMap = new ResultMap.Builder(configuration,selectId + "-Inline",entityMetadata.getEntityType(), new ArrayList<ResultMapping>(),null).build();
 		    MappedStatement.Builder builder = new MappedStatement.Builder(configuration,selectId,sqlSource,SqlCommandType.SELECT);
 		    MappedStatement ms = builder.resultMaps(Arrays.asList(resultMap)).build();
 		    configuration.addMappedStatement(ms);

@@ -38,13 +38,18 @@ import org.apache.ibatis.scripting.xmltags.StaticTextSqlNode;
 import org.apache.ibatis.session.Configuration;
 
 import com.kabouros.mybatis.api.mapper.CrudMapper;
+import com.kabouros.mybatis.core.dialect.Dialect;
 import com.kabouros.mybatis.core.mapping.EntityProperty;
 import com.kabouros.mybatis.core.mapping.MapperEntityMetadata;
 /**
  * updateNoNullField sql
  * @author JIANG
  */
-public class HandleUpdateNoNullFieldStatement implements MappedStatementHandle {
+public class HandleUpdateNoNullFieldStatement extends AbstractMappedStatementHandle implements MappedStatementHandle {
+
+	public HandleUpdateNoNullFieldStatement(Dialect dialect) {
+		super(dialect);
+	}
 
 	@Override
 	public void handle(Configuration configuration, Class<?> mapperClass,MapperEntityMetadata<?> entityMetadata) {

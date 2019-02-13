@@ -34,13 +34,19 @@ import org.apache.ibatis.scripting.xmltags.StaticTextSqlNode;
 import org.apache.ibatis.session.Configuration;
 
 import com.kabouros.mybatis.api.mapper.CrudMapper;
+import com.kabouros.mybatis.core.dialect.Dialect;
 import com.kabouros.mybatis.core.mapping.EntityProperty;
 import com.kabouros.mybatis.core.mapping.MapperEntityMetadata;
 /**
  * deleteByPrimaryKey sql
  * @author JIANG
  */
-public class HandleDeleteByPrimaryKeyStatement implements MappedStatementHandle {
+public class HandleDeleteByPrimaryKeyStatement extends AbstractMappedStatementHandle implements MappedStatementHandle {
+
+	public HandleDeleteByPrimaryKeyStatement(Dialect dialect) {
+		super(dialect);
+	}
+
 
 	@Override
 	public void handle(Configuration configuration, Class<?> mapperClass,MapperEntityMetadata<?> entityMetadata) {

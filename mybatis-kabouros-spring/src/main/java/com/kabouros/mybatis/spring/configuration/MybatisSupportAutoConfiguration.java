@@ -120,6 +120,7 @@ public class MybatisSupportAutoConfiguration {
 	 * @param factory
 	 */
 	private void applyConfiguration(SqlSessionFactoryBean factory) {
+		factory.setMappedStatementHandleAssembleAdapter(mappedStatementHandleAssembleAdapter);
 		Configuration configuration = this.properties.getConfiguration();
 		if(null != configuration) {
 			Configuration sessionConfiguration = new SessionConfiguration(mappedStatementHandleAssembleAdapter);

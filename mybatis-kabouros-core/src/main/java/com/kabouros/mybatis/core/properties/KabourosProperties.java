@@ -18,45 +18,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.kabouros.mybatis.core.vendor;
 
-import com.kabouros.mybatis.core.dialect.Dialect;
-import com.kabouros.mybatis.core.dialect.MySQLDialect;
+package com.kabouros.mybatis.core.properties;
+
+import com.kabouros.mybatis.core.vendor.Database;
 
 /**
  * @author JIANG
  */
-public enum Database {
-
-	DEFAULT,
-
-	DB2,
-
-	DERBY,
-
-	H2,
-
-	HSQL,
-
-	INFORMIX,
-
-	MYSQL,
-
-	ORACLE,
-
-	POSTGRESQL,
-
-	SQL_SERVER,
-
-	SYBASE;
+public class KabourosProperties {
 	
-	public Dialect getDialect(){
-		switch (this) {
-			case MYSQL:
-				return new MySQLDialect();
-			default:
-				return new MySQLDialect();
-		}
+	private Database database = Database.MYSQL;
+
+	public Database getDatabase() {
+		return database;
 	}
 
+	public void setDatabase(Database database) {
+		this.database = database;
+	}
 }

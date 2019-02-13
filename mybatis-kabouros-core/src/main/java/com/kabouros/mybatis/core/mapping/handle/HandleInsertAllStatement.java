@@ -37,13 +37,18 @@ import org.apache.ibatis.scripting.xmltags.StaticTextSqlNode;
 import org.apache.ibatis.session.Configuration;
 
 import com.kabouros.mybatis.api.mapper.CrudMapper;
+import com.kabouros.mybatis.core.dialect.Dialect;
 import com.kabouros.mybatis.core.mapping.EntityProperty;
 import com.kabouros.mybatis.core.mapping.MapperEntityMetadata;
 /**
  * insertAll sql
  * @author JIANG
  */
-public class HandleInsertAllStatement implements MappedStatementHandle{
+public class HandleInsertAllStatement extends AbstractMappedStatementHandle implements MappedStatementHandle{
+
+	public HandleInsertAllStatement(Dialect dialect) {
+		super(dialect);
+	}
 
 	@Override
 	public void handle(Configuration configuration, Class<?> mapperClass,MapperEntityMetadata<?> entityMetadata) {

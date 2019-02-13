@@ -22,6 +22,11 @@ package com.kabouros.mybatis.core.dialect;
 
 import java.util.regex.Pattern;
 
+import org.apache.ibatis.mapping.SqlSource;
+import org.apache.ibatis.session.Configuration;
+
+import com.kabouros.mybatis.core.mapping.MapperEntityMetadata;
+
 /**
  * @author JIANG
  */
@@ -29,8 +34,10 @@ public interface Dialect {
 	
 	Pattern REGEX_SELECT_LABEL =  Pattern.compile("<select[^>]+>");
 	
-	String processSQLCount(String contextXml,String selectId);
+	String handleCountSQL(String contextXml,String selectId);
 	
-	String processSQLPageable(String contextXml,String selectId);
+	String handlePageableSQL(String contextXml,String selectId);
+	
+	SqlSource createSelectByPageableSqlSource(Configuration configuration,String selectId,MapperEntityMetadata<?> entityMetadata);
 	
 }

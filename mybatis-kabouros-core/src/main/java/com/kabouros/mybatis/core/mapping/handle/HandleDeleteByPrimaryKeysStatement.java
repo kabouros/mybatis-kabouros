@@ -37,6 +37,7 @@ import org.apache.ibatis.scripting.xmltags.StaticTextSqlNode;
 import org.apache.ibatis.session.Configuration;
 
 import com.kabouros.mybatis.api.mapper.CrudMapper;
+import com.kabouros.mybatis.core.dialect.Dialect;
 import com.kabouros.mybatis.core.mapping.EntityProperty;
 import com.kabouros.mybatis.core.mapping.MapperEntityMetadata;
 import com.kabouros.mybatis.core.util.ClassUtil;
@@ -44,8 +45,12 @@ import com.kabouros.mybatis.core.util.ClassUtil;
  * deleteByPrimaryKey sql
  * @author JIANG
  */
-public class HandleDeleteByPrimaryKeysStatement implements MappedStatementHandle {
+public class HandleDeleteByPrimaryKeysStatement extends AbstractMappedStatementHandle implements MappedStatementHandle {
 	
+	public HandleDeleteByPrimaryKeysStatement(Dialect dialect) {
+		super(dialect);
+	}
+
 	@Override
 	public void handle(Configuration configuration, Class<?> mapperClass,MapperEntityMetadata<?> entityMetadata) {
 		String insertId = String.join(".",mapperClass.getName(),CrudMapper.METHOD_NAME_DELETEBYPRIMARYKEYS);

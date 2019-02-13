@@ -18,45 +18,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.kabouros.mybatis.core.vendor;
 
-import com.kabouros.mybatis.core.dialect.Dialect;
-import com.kabouros.mybatis.core.dialect.MySQLDialect;
+package com.kabouros.mybatis.spring.properties;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
+import com.kabouros.mybatis.core.properties.KabourosProperties;
 
 /**
  * @author JIANG
  */
-public enum Database {
-
-	DEFAULT,
-
-	DB2,
-
-	DERBY,
-
-	H2,
-
-	HSQL,
-
-	INFORMIX,
-
-	MYSQL,
-
-	ORACLE,
-
-	POSTGRESQL,
-
-	SQL_SERVER,
-
-	SYBASE;
+@ConfigurationProperties(prefix="mybatis.kabouros")
+public class MybatisKabourosProperties extends KabourosProperties {
 	
-	public Dialect getDialect(){
-		switch (this) {
-			case MYSQL:
-				return new MySQLDialect();
-			default:
-				return new MySQLDialect();
-		}
-	}
-
 }

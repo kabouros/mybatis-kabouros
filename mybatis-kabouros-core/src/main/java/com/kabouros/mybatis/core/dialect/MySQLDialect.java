@@ -20,12 +20,25 @@
  */
 package com.kabouros.mybatis.core.dialect;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.ibatis.mapping.SqlSource;
+import org.apache.ibatis.scripting.xmltags.DynamicSqlSource;
+import org.apache.ibatis.scripting.xmltags.IfSqlNode;
+import org.apache.ibatis.scripting.xmltags.MixedSqlNode;
+import org.apache.ibatis.scripting.xmltags.SqlNode;
+import org.apache.ibatis.scripting.xmltags.StaticTextSqlNode;
+import org.apache.ibatis.scripting.xmltags.TextSqlNode;
+import org.apache.ibatis.session.Configuration;
+
 import com.kabouros.mybatis.api.domain.Pageable;
+import com.kabouros.mybatis.core.mapping.MapperEntityMetadata;
 
 public class MySQLDialect implements Dialect {
 
 	@Override
-	public String processSQLPageable(String contextXml, String selectId) {
+	public String handlePageableSQL(String contextXml, String selectId) {
 		int lastIndexOf = contextXml.lastIndexOf("</select");
 		if(lastIndexOf != -1){
 			contextXml = new StringBuilder(contextXml.substring(0, lastIndexOf)).append(Pageable.LIMIT_SQL).append("\n</select>").toString();
@@ -34,7 +47,7 @@ public class MySQLDialect implements Dialect {
 	}
 
 	@Override
-	public String processSQLCount(String contextXml, String selectId) {
+	public String handleCountSQL(String contextXml, String selectId) {
     	String body = REGEX_SELECT_LABEL.matcher(contextXml).replaceFirst("");
     	if(null != body){
     		int fromIndex = body.indexOf("from");
@@ -44,6 +57,18 @@ public class MySQLDialect implements Dialect {
     	}
     	String str = new StringBuilder("<select").append(" id=\"").append(selectId).append(Pageable.SQL_COUNT_SUFFIX).append("\" resultType=\"long\">\n ").append(body).toString();
 		return str;
+	}
+	
+	@Override
+	public SqlSource createSelectByPageableSqlSource(Configuration configuration,String selectId,MapperEntityMetadata<?> entityMetadata){
+		List<SqlNode> rootSqlNodes = new ArrayList<>();
+		rootSqlNodes.add(new StaticTextSqlNode(new StringBuilder("select * from ").append(entityMetadata.getTableName()).append(" where 1 = 1 ").toString()));
+		//sort
+		rootSqlNodes.add(new IfSqlNode(new TextSqlNode(String.join("","${",Pageable.PARAM_PROPERTY_SORT,"}")),String.join("!=",Pageable.PARAM_PROPERTY_SORT,"null")));
+		//limit
+		rootSqlNodes.add(new StaticTextSqlNode(Pageable.LIMIT_SQL));
+	    MixedSqlNode sqlNode = new MixedSqlNode(rootSqlNodes);
+	    return new DynamicSqlSource(configuration,sqlNode);
 	}
 
 }

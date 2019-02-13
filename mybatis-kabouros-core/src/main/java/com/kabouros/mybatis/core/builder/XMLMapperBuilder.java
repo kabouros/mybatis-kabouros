@@ -77,7 +77,6 @@ import org.xml.sax.SAXException;
 import com.kabouros.mybatis.api.domain.Page;
 import com.kabouros.mybatis.api.domain.Pageable;
 import com.kabouros.mybatis.core.dialect.Dialect;
-import com.kabouros.mybatis.core.dialect.MySQLDialect;
 
 
 /**
@@ -88,27 +87,33 @@ import com.kabouros.mybatis.core.dialect.MySQLDialect;
  */
 public class XMLMapperBuilder extends BaseBuilder {
 
+	private final Dialect dialect;
 	private final XPathParser parser;
 	private final MapperBuilderAssistant builderAssistant;
 	private final Map<String, XNode> sqlFragments;
 	private final String resource;
 
-	public XMLMapperBuilder(InputStream inputStream, Configuration configuration, String resource,Map<String, XNode> sqlFragments, String namespace) {
-		this(inputStream, configuration, resource, sqlFragments);
+	public XMLMapperBuilder(InputStream inputStream, 
+			                Configuration configuration, 
+			                String resource,Map<String, XNode> sqlFragments, 
+			                String namespace,
+			                Dialect dialect) {
+		this(inputStream, configuration, resource, sqlFragments,dialect);
 		this.builderAssistant.setCurrentNamespace(namespace);
 	}
 
-	public XMLMapperBuilder(InputStream inputStream, Configuration configuration, String resource,Map<String, XNode> sqlFragments) {
+	public XMLMapperBuilder(InputStream inputStream, Configuration configuration, String resource,Map<String, XNode> sqlFragments,Dialect dialect) {
 			
-		this(new XPathParser(inputStream, true, configuration.getVariables(), new XMLMapperEntityResolver()),configuration, resource, sqlFragments);
+		this(new XPathParser(inputStream, true, configuration.getVariables(), new XMLMapperEntityResolver()),configuration, resource, sqlFragments,dialect);
 	}
 
-	private XMLMapperBuilder(XPathParser parser, Configuration configuration, String resource,Map<String, XNode> sqlFragments) {
+	private XMLMapperBuilder(XPathParser parser, Configuration configuration, String resource,Map<String, XNode> sqlFragments,Dialect dialect) {
 		super(configuration);
 		this.builderAssistant = new MapperBuilderAssistant(configuration, resource);
 		this.parser = parser;
 		this.sqlFragments = sqlFragments;
 		this.resource = resource;
+		this.dialect = dialect;
 	}
 
 	public void parse() {
@@ -466,10 +471,6 @@ public class XMLMapperBuilder extends BaseBuilder {
 	}
 	
     private static final TransformerFactory TRANSFORMER_FACTORY = TransformerFactory.newInstance();
-    /**
-     * default mysql dialect
-     */
-    private static final Dialect DIALECT = new MySQLDialect();
     
 	private XNode buildSqlCountStatementContext(List<String> methods,XNode context, String requiredDatabaseId) {
 		String selectId = context.getStringAttribute("id");
@@ -494,7 +495,7 @@ public class XMLMapperBuilder extends BaseBuilder {
 						         .append("</if>")
 						         .append("\n</select>").toString();
 			}
-			contextXml = DIALECT.processSQLPageable(contextXml, selectId);
+			contextXml = dialect.handlePageableSQL(contextXml, selectId);
 			Node newContextNode = new XPathParser(contextXml).evalNode("select").getNode();
 			context = context.newXNode(newContextNode);
 			
@@ -503,7 +504,7 @@ public class XMLMapperBuilder extends BaseBuilder {
 	}
 	
     private XNode newSqlCountXNode(XNode context,String contextXml,String selectId) {
-    	String sqlCount = DIALECT.processSQLCount(contextXml, selectId);
+    	String sqlCount = dialect.handleCountSQL(contextXml, selectId);
     	Node node = new XPathParser(sqlCount).evalNode("select").getNode();
     	return context.newXNode(node);
     }
