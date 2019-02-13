@@ -35,6 +35,12 @@ public interface MyBatisMapper<T,ID extends Serializable> extends CrudMapper<T,I
 	
 	String METHOD_NAME_SELECTALLBYPAGEABLE = "selectAllByPageable";
 	
+	
+	/**
+	 * Select all by pageable
+	 * @param pageable page entity
+	 * @return page
+	 */
 	Page<T> selectAllByPageable(Pageable pageable);
 	
 }
