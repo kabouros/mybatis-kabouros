@@ -49,7 +49,7 @@ import com.kabouros.mybatis.spring.session.SqlSessionFactoryBean;
  */
 @org.springframework.context.annotation.Configuration
 @Import(DelegatingMybatisKabourosConfigurer.class)
-public class MybatisSupportAutoConfiguration {
+public class MybatisKabourosAutoConfiguration {
 
 	private final MybatisProperties properties;
 
@@ -63,7 +63,7 @@ public class MybatisSupportAutoConfiguration {
 	
 	private final MappedStatementHandleAssembleAdapter mappedStatementHandleAssembleAdapter;
 
-	public MybatisSupportAutoConfiguration(MybatisProperties properties,
+	public MybatisKabourosAutoConfiguration(MybatisProperties properties,
 			ObjectProvider<Interceptor[]> interceptorsProvider, ResourceLoader resourceLoader,
 			ObjectProvider<DatabaseIdProvider> databaseIdProvider,
 			ObjectProvider<List<ConfigurationCustomizer>> configurationCustomizersProvider,
