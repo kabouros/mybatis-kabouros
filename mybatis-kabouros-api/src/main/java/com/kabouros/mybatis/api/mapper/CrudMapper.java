@@ -43,6 +43,7 @@ public interface CrudMapper<T,ID extends Serializable> {
 	String METHOD_NAME_SELECTFIELDBYPRIMARYKEY = "selectFieldByPrimaryKey";
 	String METHOD_NAME_SELECTALL = "selectAll";
 	String METHOD_NAME_SELECTALLBYPAGEABLE = "selectAllByPageable";
+	String METHOD_NAME_COUNT = "selectTotalCount";
 	
 	/**
 	 * Insert single entity
@@ -109,5 +110,11 @@ public interface CrudMapper<T,ID extends Serializable> {
 	 * @return page
 	 */
 	Page<T> selectAllByPageable(Pageable pageable);
+	
+	/**
+	 * Returns the number of entities available.
+	 * @return the number of entities
+	 */
+	long selectTotalCount();
 	
 }
