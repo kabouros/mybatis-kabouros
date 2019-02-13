@@ -44,6 +44,7 @@ public class MappedStatementHandleRegistry {
 		HANDLE_MAP.put(HandleDeleteByPrimaryKeysStatement.class, new HandleDeleteByPrimaryKeysStatement());
 		HANDLE_MAP.put(HandleDeleteByPrimaryKeyStatement.class, new HandleDeleteByPrimaryKeyStatement());
 		HANDLE_MAP.put(HandleSelectAllStatement.class, new HandleSelectAllStatement());
+		HANDLE_MAP.put(HandleSelectAllByPageableStatement.class, new HandleSelectAllByPageableStatement());
 	}
 	
 	/**
