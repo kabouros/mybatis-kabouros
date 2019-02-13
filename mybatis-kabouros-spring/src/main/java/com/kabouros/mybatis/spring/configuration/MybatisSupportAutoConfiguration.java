@@ -109,7 +109,7 @@ public class MybatisSupportAutoConfiguration {
 	}
 
 	/**
-	 * 强制装载 SessionConfiguration
+	 * Compulsory loading SessionConfiguration
 	 * @param factory
 	 */
 	private void applyConfiguration(SqlSessionFactoryBean factory) {

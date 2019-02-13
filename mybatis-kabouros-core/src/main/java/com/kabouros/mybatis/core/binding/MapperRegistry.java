@@ -31,7 +31,9 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 
 /**
- * 重写 getMapper，hasMapper，addMapper，getMappers 函数，以达到替换原有的 MapperProxyFactory 目的
+ * Override getMapper,hasMapper,addMapper,getMappers function,
+ * Replace the original MapperProxyFactory.
+ * 
  * @author Clinton Begin
  * @author Eduardo Macarron
  * @author Lasse Voss

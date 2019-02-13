@@ -76,7 +76,7 @@ import com.kabouros.mybatis.core.config.SessionConfiguration;
  * multiple databases or when container managed transactions (CMT) are being
  * used.
  * 
- * 装载 SessionConfiguration，XMLMapperBuilder
+ * Loading SessionConfiguration,XMLMapperBuilder
  * 
  * @author Putthibong Boonbong
  * @author Hunter Presnall

@@ -38,8 +38,6 @@ import com.kabouros.mybatis.core.mapping.handle.MappedStatementHandleRegistry;
 import com.kabouros.mybatis.core.util.ClassUtil;
 
 /**
- * 接口映射代理工厂
- * 
  * @see org.apache.ibatis.binding.MapperProxyFactory
  * 
  * @author JIANG

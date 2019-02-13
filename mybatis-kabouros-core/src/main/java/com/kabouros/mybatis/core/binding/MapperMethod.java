@@ -48,8 +48,6 @@ import com.kabouros.mybatis.api.domain.Pageable;
 import com.kabouros.mybatis.core.param.ParamNameResolver;
 
 /**
- * 接口映射函数处理
- * 
  * @see org.apache.ibatis.binding.MapperMethod
  * 
  * @author Clinton Begin

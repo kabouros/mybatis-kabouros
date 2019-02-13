@@ -27,7 +27,7 @@ import com.kabouros.mybatis.core.binding.MapperRegistry;
 
 
 /**
- * 重写 MapperRegistry 相关
+ * Override MapperRegistry relevant
  * @author JIANG
  */
 public class SessionConfiguration extends Configuration {
