@@ -75,6 +75,7 @@ import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 import com.kabouros.mybatis.api.domain.Page;
+import com.kabouros.mybatis.api.domain.Pageable;
 import com.kabouros.mybatis.core.dialect.Dialect;
 import com.kabouros.mybatis.core.dialect.MySQLDialect;
 
@@ -480,6 +481,18 @@ public class XMLMapperBuilder extends BaseBuilder {
 				statementParser.parseStatementNode();
 			} catch (IncompleteElementException e) {
 				configuration.addIncompleteStatement(statementParser);
+			}
+			int lastIndexOf = contextXml.lastIndexOf("</select");
+			if(lastIndexOf != -1){
+				contextXml = new StringBuilder(contextXml.substring(0, lastIndexOf))
+						         .append("<if test=\"")
+						         .append(Pageable.PARAM_PROPERTY_SORT)
+						         .append(" !=null\">")
+						         .append("${")
+						         .append(Pageable.PARAM_PROPERTY_SORT)
+						         .append("}")
+						         .append("</if>")
+						         .append("\n</select>").toString();
 			}
 			contextXml = DIALECT.processSQLPageable(contextXml, selectId);
 			Node newContextNode = new XPathParser(contextXml).evalNode("select").getNode();

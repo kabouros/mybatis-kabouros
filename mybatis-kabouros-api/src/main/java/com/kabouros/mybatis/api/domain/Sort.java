@@ -310,4 +310,19 @@ public class Sort implements Iterable<Order>, Serializable {
 			return new Sort(this.direction, properties);
 		}
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		for(Iterator<Order> it = this.iterator();it.hasNext();){
+			Order order = it.next();
+			sb.append(order.getProperty()).append(" ").append(order.getDirection()).append(",");
+		}
+		int length = sb.length();
+		if(length != 0){
+			return sb.deleteCharAt(length-1).insert(0, "ORDER BY ").toString();
+		}
+		return null;
+	}
+	
 }

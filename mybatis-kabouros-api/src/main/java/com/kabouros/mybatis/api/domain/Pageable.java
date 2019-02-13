@@ -27,10 +27,12 @@ public interface Pageable {
 	
 	String PARAM_NAME_START = "start";
 	String PARAM_NAME_OFFSET = "offset";
+	String PARAM_NAME_SORT = "sort";
 	String SQL_COUNT_SUFFIX = "-count";
 	String NAME = Pageable.class.getSimpleName().toLowerCase();
 	String PARAM_PROPERTY_START = String.join(".", NAME,PARAM_NAME_START);
 	String PARAM_PROPERTY_OFFSET = String.join(".", NAME,PARAM_NAME_OFFSET);
+	String PARAM_PROPERTY_SORT = String.join(".", NAME,PARAM_NAME_SORT);
 	String LIMIT_SQL = String.join("", " limit #{",PARAM_PROPERTY_START,"},","#{",PARAM_PROPERTY_OFFSET,"} ");
 	
 	int getPageNumber();
