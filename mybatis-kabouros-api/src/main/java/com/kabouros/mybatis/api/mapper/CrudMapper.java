@@ -23,6 +23,9 @@ package com.kabouros.mybatis.api.mapper;
 import java.io.Serializable;
 import java.util.List;
 
+import com.kabouros.mybatis.api.domain.Page;
+import com.kabouros.mybatis.api.domain.Pageable;
+
 /**
  * @author JIANG
  *
@@ -39,6 +42,7 @@ public interface CrudMapper<T,ID extends Serializable> {
 	String METHOD_NAME_DELETEBYPRIMARYKEYS = "deleteByPrimaryKeys";
 	String METHOD_NAME_SELECTFIELDBYPRIMARYKEY = "selectFieldByPrimaryKey";
 	String METHOD_NAME_SELECTALL = "selectAll";
+	String METHOD_NAME_SELECTALLBYPAGEABLE = "selectAllByPageable";
 	
 	/**
 	 * Insert single entity
@@ -98,5 +102,12 @@ public interface CrudMapper<T,ID extends Serializable> {
 	 * @return entity
 	 */
 	List<T> selectAll();
+	
+	/**
+	 * Select all by pageable
+	 * @param pageable page entity
+	 * @return page
+	 */
+	Page<T> selectAllByPageable(Pageable pageable);
 	
 }

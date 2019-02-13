@@ -22,11 +22,9 @@ package com.kabouros.mybatis.api.mapper;
 
 import java.io.Serializable;
 
-import com.kabouros.mybatis.api.mapper.MyBatisMapper;
-
 /**
  * @author JIANG
  */
-public interface BaseMapper <T,ID extends Serializable> extends MyBatisMapper<T,ID> {
+public interface BaseMapper <T,ID extends Serializable> extends CrudMapper<T,ID> {
 	
 }
