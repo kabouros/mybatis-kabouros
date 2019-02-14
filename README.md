@@ -115,8 +115,8 @@ public class Application {
   @Transactional(rollbackFor=Exception.class)
   public void testName(){
     User jiang = new User("jiang");
-	User zhang = new User("zhang");
-	userService.save(jiang,zhang);
+    User zhang = new User("zhang");
+    userService.saveAll(jiang,zhang);
   }
 }
 ```
