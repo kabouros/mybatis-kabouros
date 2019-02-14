@@ -19,6 +19,12 @@
  * SOFTWARE.
  */
 package com.kabouros.mybatis.api;
+
+import java.util.List;
+
+import com.kabouros.mybatis.api.domain.Page;
+import com.kabouros.mybatis.api.domain.Pageable;
+
 /**
  * @author JIANG
  *
@@ -26,5 +32,27 @@ package com.kabouros.mybatis.api;
  * @param <ID>
  */
 public interface BaseService <T,ID> {
+	
+	int save(T t);
+	
+	int saveAll(List<T> list);
+	
+	int update(T t);
+	
+	int updateNotNullProperty(T t);
+	
+	T queryByPrimaryKey(ID id);
+	
+	int deleteByPrimaryKey(ID id);
+	
+	int deleteByPrimaryKeys(List<ID> ids);
+	
+	T queryFieldByPrimaryKey(String fieldStr,ID id);
+	
+	List<T> queryAll();
+	
+	Page<T> queryAllByPageable(Pageable pageable);
+	
+	long queryTotalCount();
 
 }

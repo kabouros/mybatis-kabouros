@@ -24,8 +24,8 @@ import java.io.Serializable;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.kabouros.mybatis.api.BaseService;
 import com.kabouros.mybatis.api.mapper.BaseMapper;
+import com.kabouros.mybatis.core.BaseServiceImpl;
 
 /**
  * @author JIANG
@@ -34,9 +34,13 @@ import com.kabouros.mybatis.api.mapper.BaseMapper;
  * @param <ID>
  * @param <R>
  */
-public abstract class BaseServiceImpl<T, ID extends Serializable, R extends BaseMapper<T, ID>> implements BaseService<T, ID> {
-		
+public abstract class SpringBaseServiceImpl<T,ID extends Serializable,R extends BaseMapper<T,ID>> extends BaseServiceImpl<T,ID,R> {
+	
 	@Autowired
 	protected R mapper;
-
+		
+	public R getCurrentMapper(){
+		
+		return mapper;
+	}
 }
